@@ -1,5 +1,5 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 export default function TipList({ tips, onUpdate }) {
   const [editId, setEditId] = useState(null);
@@ -7,10 +7,10 @@ export default function TipList({ tips, onUpdate }) {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`/api/communityTips/${id}`, { method: "DELETE" });
+      await fetch(`/api/communityTips/${id}`, { method: 'DELETE' });
       onUpdate();
     } catch (err) {
-      console.error("Failed to delete tip", err);
+      console.error('Failed to delete tip', err);
     }
   };
 
@@ -22,23 +22,23 @@ export default function TipList({ tips, onUpdate }) {
   const handleSave = async (id) => {
     try {
       await fetch(`/api/communityTips/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editData),
       });
       setEditId(null);
       onUpdate();
     } catch (err) {
-      console.error("Failed to update tip", err);
+      console.error('Failed to update tip', err);
     }
   };
 
   const handleUpvote = async (id) => {
     try {
-      await fetch(`/api/communityTips/${id}/upvote`, { method: "PATCH" });
+      await fetch(`/api/communityTips/${id}/upvote`, { method: 'PATCH' });
       onUpdate();
     } catch (err) {
-      console.error("Failed to upvote tip", err);
+      console.error('Failed to upvote tip', err);
     }
   };
 
@@ -50,7 +50,9 @@ export default function TipList({ tips, onUpdate }) {
             <div>
               <select
                 value={editData.tripType}
-                onChange={(e) => setEditData({ ...editData, tripType: e.target.value })}
+                onChange={(e) =>
+                  setEditData({ ...editData, tripType: e.target.value })
+                }
               >
                 <option value="beach">Beach</option>
                 <option value="hiking">Hiking</option>
@@ -61,11 +63,15 @@ export default function TipList({ tips, onUpdate }) {
               <input
                 type="text"
                 value={editData.author}
-                onChange={(e) => setEditData({ ...editData, author: e.target.value })}
+                onChange={(e) =>
+                  setEditData({ ...editData, author: e.target.value })
+                }
               />
               <textarea
                 value={editData.tip}
-                onChange={(e) => setEditData({ ...editData, tip: e.target.value })}
+                onChange={(e) =>
+                  setEditData({ ...editData, tip: e.target.value })
+                }
               />
               <button onClick={() => handleSave(tip._id)}>Save</button>
               <button onClick={() => setEditId(null)}>Cancel</button>
@@ -74,7 +80,9 @@ export default function TipList({ tips, onUpdate }) {
             <div>
               <strong>{tip.tripType}</strong> — {tip.author}
               <p>{tip.tip}</p>
-              <button onClick={() => handleUpvote(tip._id)}>👍 {tip.upvotes}</button>
+              <button onClick={() => handleUpvote(tip._id)}>
+                👍 {tip.upvotes}
+              </button>
               <button onClick={() => handleEdit(tip)}>Edit</button>
               <button onClick={() => handleDelete(tip._id)}>Delete</button>
             </div>

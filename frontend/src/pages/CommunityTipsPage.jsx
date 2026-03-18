@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import TipList from "../components/communityTips/TipList.jsx";
-import TipForm from "../components/communityTips/TipForm.jsx";
+import { useState, useEffect } from 'react';
+import TipList from '../components/communityTips/TipList.jsx';
+import TipForm from '../components/communityTips/TipForm.jsx';
 
 export default function CommunityTipsPage() {
   const [tips, setTips] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterTripType, setFilterTripType] = useState("");
+  const [filterTripType, setFilterTripType] = useState('');
 
   const fetchTips = async () => {
     try {
-      const query = filterTripType ? `?tripType=${filterTripType}` : "";
+      const query = filterTripType ? `?tripType=${filterTripType}` : '';
       const res = await fetch(`/api/communityTips${query}`);
       const data = await res.json();
       setTips(data);
     } catch (err) {
-      console.error("Failed to fetch tips", err);
+      console.error('Failed to fetch tips', err);
     } finally {
       setLoading(false);
     }
@@ -39,7 +39,11 @@ export default function CommunityTipsPage() {
         <option value="business">Business</option>
       </select>
       <TipForm onTipAdded={fetchTips} />
-      {loading ? <p>Loading...</p> : <TipList tips={tips} onUpdate={fetchTips} />}
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <TipList tips={tips} onUpdate={fetchTips} />
+      )}
     </div>
   );
 }

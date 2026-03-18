@@ -1,25 +1,25 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 export default function TipForm({ onTipAdded }) {
-  const [tripType, setTripType] = useState("");
-  const [tip, setTip] = useState("");
-  const [author, setAuthor] = useState("");
+  const [tripType, setTripType] = useState('');
+  const [tip, setTip] = useState('');
+  const [author, setAuthor] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetch("/api/communityTips", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      await fetch('/api/communityTips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tripType, tip, author }),
       });
-      setTripType("");
-      setTip("");
-      setAuthor("");
+      setTripType('');
+      setTip('');
+      setAuthor('');
       onTipAdded();
     } catch (err) {
-      console.error("Failed to add tip", err);
+      console.error('Failed to add tip', err);
     }
   };
 
