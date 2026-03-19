@@ -36,6 +36,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "express-validator": "^7.3.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.6",
@@ -44,6 +45,7 @@
     "nodemon": "^3.1.11",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
     "prettier": "^3.8.1",
     "trim-request": "^1.0.6"
   },
