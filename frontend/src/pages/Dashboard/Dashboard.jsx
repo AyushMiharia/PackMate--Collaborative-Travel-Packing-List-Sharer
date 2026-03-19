@@ -1,18 +1,32 @@
-// src/pages/Dashboard/Dashboard.js
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { mockTrips } from '../../utils/mockData';
 import TripCard from '../../components/TripCard/TripCard';
 import styles from './Dashboard.module.css';
-
+import { api } from '../../utils/api';
+import CenteredSpinner from '../../components/centeredSpinner/index';
 const TABS = ['all', 'planning', 'ongoing', 'completed'];
 
 const Dashboard = ({ user, isAuthenticated }) => {
-  const [trips, setTrips] = useState(mockTrips);
+  const [trips, setTrips] = useState();
+  const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('all');
 
-  const visible = tab === 'all' ? trips : trips.filter((t) => t.status === tab);
+  const fetchTrips = async () => {
+    try {
+      const data = await api.getMyTrips();
+      setTrips(data);
+      console.log(data);
+    } catch (error) {
+      console.error('Failed to fetch trips:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTrips();
+  }, []);
 
   const handleDelete = (id) => {
     if (!window.confirm('Delete this trip?')) return;
@@ -20,9 +34,13 @@ const Dashboard = ({ user, isAuthenticated }) => {
   };
 
   const counts = TABS.reduce((acc, t) => {
-    acc[t] = t === 'all' ? trips.length : trips.filter((x) => x.status === t).length;
+    acc[t] = t === 'all' ? trips?.length : trips?.filter((x) => x.status === t).length;
     return acc;
   }, {});
+
+  if (loading) {
+    return <CenteredSpinner size="small" />;
+  }
 
   return (
     <div className={styles.page}>
@@ -68,15 +86,15 @@ const Dashboard = ({ user, isAuthenticated }) => {
               onClick={() => setTab(t)}
             >
               {t.charAt(0).toUpperCase() + t.slice(1)}
-              <span className={styles.tabCount}>{counts[t]}</span>
+              <span className={styles.tabCount}></span>
             </button>
           ))}
         </div>
 
         {/* list */}
-        {visible.length > 0 ? (
+        {trips.length > 0 ? (
           <div className={styles.list}>
-            {visible.map((trip, i) => (
+            {trips.map((trip, i) => (
               <TripCard key={trip._id} trip={trip} index={i} onDelete={handleDelete} />
             ))}
           </div>

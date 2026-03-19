@@ -27,7 +27,7 @@ const Login = () => {
       setLoading(true);
       const response = await api.login(form);
       console.log(response);
-      navigate('/dashboard');
+      navigate('/');
       toast.success('Logged in successfully!');
     } catch (error) {
       console.error('Login failed:', error);

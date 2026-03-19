@@ -1,20 +1,19 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { PAGE_LOGIN, PAGE_USERS } from '../../utils/constants/index';
 import useAuth from '../../hooks/useAuth';
 
 const PageAccessWrapper = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   // if not authenticated
   if (!isAuthenticated) {
-    return <Navigate replace to={PAGE_LOGIN.path} />;
+    return <Navigate replace to={'/login'} />;
   }
 
-  if (!user.isAdmin && isAuthenticated) {
+  if (isAuthenticated) {
     return <Outlet />;
   }
 
-  return <Navigate replace to={PAGE_USERS.path} />;
+  return <Navigate replace to={'/'} />;
 };
 
 export default PageAccessWrapper;

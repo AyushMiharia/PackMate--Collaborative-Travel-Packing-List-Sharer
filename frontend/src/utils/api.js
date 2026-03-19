@@ -40,7 +40,6 @@ export const api = {
       headers: json(),
       credentials: 'include',
     }).then(handle),
-
   verify: (d) =>
     fetch(`${BASE}/api/auth/token`, {
       method: 'GET',
@@ -50,13 +49,18 @@ export const api = {
     }).then(handle),
 
   // trips
-  getTrips: () => fetch(`${BASE}/api/trips`, { headers: auth() }).then(handle),
-  getTrip: (id) => fetch(`${BASE}/api/trips/${id}`, { headers: auth() }).then(handle),
+  getTrips: () =>
+    fetch(`${BASE}/api/trips`, { headers: auth(), credentials: 'include' }).then(handle),
+  getMyTrips: () =>
+    fetch(`${BASE}/api/trips/my-trips`, { headers: auth(), credentials: 'include' }).then(handle),
+  getTrip: (id) =>
+    fetch(`${BASE}/api/trips/${id}`, { headers: auth(), credentials: 'include' }).then(handle),
   createTrip: (d) =>
     fetch(`${BASE}/api/trips`, {
       method: 'POST',
       headers: { ...json(), ...auth() },
       body: JSON.stringify(d),
+      credentials: 'include',
     }).then(handle),
   updateTrip: (id, d) =>
     fetch(`${BASE}/api/trips/${id}`, {
@@ -66,6 +70,25 @@ export const api = {
     }).then(handle),
   deleteTrip: (id) =>
     fetch(`${BASE}/api/trips/${id}`, { method: 'DELETE', headers: auth() }).then(handle),
+
+  // trip items
+  addTripItem: (tripId, d) =>
+    fetch(`${BASE}/api/trips/${tripId}/items`, {
+      method: 'PATCH',
+      headers: { ...json(), ...auth() },
+      body: JSON.stringify(d),
+    }).then(handle),
+  toggleTripItem: (tripId, index, isChecked) =>
+    fetch(`${BASE}/api/trips/${tripId}/items/${index}`, {
+      method: 'PATCH',
+      headers: { ...json(), ...auth() },
+      body: JSON.stringify({ isChecked }),
+    }).then(handle),
+  removeTripItem: (tripId, index) =>
+    fetch(`${BASE}/api/trips/${tripId}/items/${index}`, {
+      method: 'DELETE',
+      headers: auth(),
+    }).then(handle),
 
   // items
   getItems: (params = {}) =>
@@ -110,9 +133,10 @@ export const api = {
   // user
   getMe: () => fetch(`${BASE}/api/users/me`, { headers: auth() }).then(handle),
   updateMe: (d) =>
-    fetch(`${BASE}/api/users/me`, {
+    fetch(`${BASE}/api/user`, {
       method: 'PUT',
       headers: { ...json(), ...auth() },
       body: JSON.stringify(d),
+      credentials: 'include',
     }).then(handle),
 };

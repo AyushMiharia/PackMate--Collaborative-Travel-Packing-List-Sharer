@@ -1,11 +1,17 @@
 import express from 'express'
 import authRouter from './auth.js'
 import createUser from './user.js'
+import tripRouter from './trips.js'
+import itemsRouter from './items.js'
+import tipsRouter from './communityTips.js'
 
 const router = express.Router()
 
 router.use('/api/auth', authRouter)
 router.use('/api/user', createUser)
+router.use('/api/trips', tripRouter)
+router.use('/api/items', itemsRouter)
+router.get('/api/tips', tipsRouter)
 
 router.get('/test', (req, res) => {
   try {

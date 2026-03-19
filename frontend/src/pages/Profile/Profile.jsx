@@ -1,28 +1,42 @@
-// src/pages/Profile/Profile.js
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { mockTips, mockTrips } from '../../utils/mockData';
 import TipCard from '../../components/TipCard/TipCard';
 import styles from './Profile.module.css';
+import { api } from '../../utils/api';
+import { toast } from 'sonner';
 
 const Profile = ({ user, isAuthenticated }) => {
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState(user);
   const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState({ name: user?.name || '', email: user?.email || '' });
+  const [form, setForm] = useState({ name: user?.name || '', homeCity: user?.homeCity || '' });
   const [saved, setSaved] = useState(false);
 
   const myTips = mockTips.filter((t) => user?.submittedTips?.includes(t._id));
   const activeTrip = mockTrips.find((t) => t._id === user?.currentActiveTripId);
 
-  const handleSave = () => {
-    setSaved(true);
-    setEditing(false);
-    setTimeout(() => setSaved(false), 2500);
+  const handleSave = async () => {
+    try {
+      setSaved(true);
+      setEditing(false);
+      const response = await api.updateMe(form);
+      setUserInfo(response);
+    } catch (error) {
+      console.error('Profile update failed:', error);
+      toast.error('Failed to update profile. Please try again.');
+    }
   };
 
-  const handleLogout = () => {
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await api.logout();
+      navigate('/');
+      toast.success('Logged out successfully!');
+    } catch (error) {
+      toast.error('Logout failed. Please try again.');
+    }
   };
 
   if (!isAuthenticated)
@@ -39,10 +53,11 @@ const Profile = ({ user, isAuthenticated }) => {
       <div className={`${styles.inner} container`}>
         {/* header */}
         <div className={styles.header}>
-          <div className={styles.avatar}>{user.name[0].toUpperCase()}</div>
+          <div className={styles.avatar}>{userInfo.name[0].toUpperCase()}</div>
           <div className={styles.info}>
-            <h1 className={styles.name}>{form.name}</h1>
-            <p className={styles.email}>{form.email}</p>
+            <h1 className={styles.name}>{userInfo.name}</h1>
+            <p className={styles.email}>{userInfo.homeCity}</p>
+            <p className={styles.email}>{userInfo.email}</p>
             <div className={styles.pills}>
               <span className={styles.pill}>{mockTrips.length} trips</span>
               <span className={`${styles.pill} ${styles.pillBlue}`}>
@@ -84,14 +99,14 @@ const Profile = ({ user, isAuthenticated }) => {
               </div>
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="p-email">
-                  Email
+                  Home City
                 </label>
                 <input
                   id="p-email"
                   className={styles.input}
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+                  type="text"
+                  value={form.homeCity}
+                  onChange={(e) => setForm((p) => ({ ...p, homeCity: e.target.value }))}
                 />
               </div>
             </div>
@@ -162,8 +177,8 @@ Profile.propTypes = {
     upvotedTips: PropTypes.arrayOf(PropTypes.string),
     currentActiveTripId: PropTypes.string,
   }),
-  onLogout: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
 };
-Profile.defaultProps = { user: null };
+Profile.defaultProps = { user: null, isAuthenticated: false };
 
 export default Profile;

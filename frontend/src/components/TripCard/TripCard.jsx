@@ -1,26 +1,24 @@
 // src/components/TripCard/TripCard.js
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { climateEmoji, typeEmoji } from '../../utils/mockData';
+import { climateEmoji } from '../../utils/mockData';
 import styles from './TripCard.module.css';
 
 const statusMeta = {
-  planning:  { label: 'Planning',  cls: 'blue'  },
-  ongoing:   { label: 'Ongoing',   cls: 'amber' },
-  completed: { label: 'Done',      cls: 'green' },
+  planning: { label: 'Planning', cls: 'blue' },
+  ongoing: { label: 'Ongoing', cls: 'amber' },
+  completed: { label: 'Done', cls: 'green' },
 };
 
 const TripCard = ({ trip, index, onDelete }) => {
   const checked = trip.items.filter((i) => i.isChecked).length;
-  const total   = trip.items.length;
-  const pct     = total > 0 ? Math.round((checked / total) * 100) : 0;
-  const meta    = statusMeta[trip.status] || statusMeta.planning;
+  const total = trip.items.length;
+  const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+  const meta = statusMeta[trip.status] || statusMeta.planning;
 
   return (
     <div className={styles.row}>
-      <span className={styles.num}>
-        {String(index + 1).padStart(2, '0')}
-      </span>
+      <span className={styles.num}>{String(index + 1).padStart(2, '0')}</span>
 
       <div className={`${styles.icon} ${styles[`icon_${meta.cls}`]}`}>
         {climateEmoji[trip.climate] || '✈️'}
@@ -43,12 +41,12 @@ const TripCard = ({ trip, index, onDelete }) => {
         <span className={styles.pct}>{pct}%</span>
       </div>
 
-      <span className={`${styles.badge} ${styles[`badge_${meta.cls}`]}`}>
-        {meta.label}
-      </span>
+      <span className={`${styles.badge} ${styles[`badge_${meta.cls}`]}`}>{meta.label}</span>
 
       <div className={styles.actions}>
-        <Link to={`/trip/${trip._id}`} className={styles.viewBtn}>View →</Link>
+        <Link to={`/trip/${trip._id}`} className={styles.viewBtn}>
+          View →
+        </Link>
         <button
           className={styles.deleteBtn}
           onClick={() => onDelete(trip._id)}
@@ -63,17 +61,17 @@ const TripCard = ({ trip, index, onDelete }) => {
 
 TripCard.propTypes = {
   trip: PropTypes.shape({
-    _id:         PropTypes.string.isRequired,
-    tripName:    PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired,
+    tripName: PropTypes.string.isRequired,
     destination: PropTypes.string.isRequired,
-    country:     PropTypes.string.isRequired,
-    climate:     PropTypes.string.isRequired,
-    tripType:    PropTypes.string.isRequired,
-    durationDays:PropTypes.number.isRequired,
-    status:      PropTypes.string.isRequired,
-    items:       PropTypes.array.isRequired,
+    country: PropTypes.string.isRequired,
+    climate: PropTypes.string.isRequired,
+    tripType: PropTypes.string.isRequired,
+    durationDays: PropTypes.number.isRequired,
+    status: PropTypes.string.isRequired,
+    items: PropTypes.array.isRequired,
   }).isRequired,
-  index:    PropTypes.number.isRequired,
+  index: PropTypes.number.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 
