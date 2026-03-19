@@ -1,0 +1,33 @@
+.spin {
+    display: block;
+    animation: spin 0.75s linear infinite;
+}
+
+.track {
+    opacity: 0.4;
+}
+
+.small {
+    width: 1rem;
+    height: 1rem;
+}
+
+.medium {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.large {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

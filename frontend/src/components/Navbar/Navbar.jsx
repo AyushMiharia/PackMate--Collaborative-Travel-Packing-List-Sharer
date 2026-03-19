@@ -6,7 +6,7 @@ import styles from './Navbar.module.css';
 import { api } from '../../utils/api';
 import { toast } from 'sonner';
 
-const Navbar = ({ user, isAuthenticated, setIsAuthenticated }) => {
+const Navbar = ({ user, isAuthenticated }) => {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();

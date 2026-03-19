@@ -1,7 +1,7 @@
 // src/components/TripCard/TripCard.js
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { climateEmoji } from '../../utils/mockData';
+import { climateEmoji } from '../../utils/constants';
 import styles from './TripCard.module.css';
 
 const statusMeta = {

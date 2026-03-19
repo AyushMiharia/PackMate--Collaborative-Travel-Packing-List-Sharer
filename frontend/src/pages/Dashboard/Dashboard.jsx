@@ -5,10 +5,11 @@ import TripCard from '../../components/TripCard/TripCard';
 import styles from './Dashboard.module.css';
 import { api } from '../../utils/api';
 import CenteredSpinner from '../../components/centeredSpinner/index';
+
 const TABS = ['all', 'planning', 'ongoing', 'completed'];
 
 const Dashboard = ({ user, isAuthenticated }) => {
-  const [trips, setTrips] = useState();
+  const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('all');
 
@@ -16,7 +17,6 @@ const Dashboard = ({ user, isAuthenticated }) => {
     try {
       const data = await api.getMyTrips();
       setTrips(data);
-      console.log(data);
     } catch (error) {
       console.error('Failed to fetch trips:', error);
     } finally {
@@ -28,19 +28,24 @@ const Dashboard = ({ user, isAuthenticated }) => {
     fetchTrips();
   }, []);
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (!window.confirm('Delete this trip?')) return;
-    setTrips((p) => p.filter((t) => t._id !== id));
+    try {
+      await api.deleteTrip(id);
+      setTrips((p) => p.filter((t) => t._id !== id));
+    } catch (error) {
+      console.error('Failed to delete trip:', error);
+    }
   };
 
   const counts = TABS.reduce((acc, t) => {
-    acc[t] = t === 'all' ? trips?.length : trips?.filter((x) => x.status === t).length;
+    acc[t] = t === 'all' ? trips.length : trips.filter((x) => x.status === t).length;
     return acc;
   }, {});
 
-  if (loading) {
-    return <CenteredSpinner size="small" />;
-  }
+  const visibleTrips = tab === 'all' ? trips : trips.filter((t) => t.status === tab);
+
+  if (loading) return <CenteredSpinner size="small" />;
 
   return (
     <div className={styles.page}>
@@ -57,7 +62,6 @@ const Dashboard = ({ user, isAuthenticated }) => {
           </Link>
         </div>
 
-        {/* summary */}
         <div className={styles.summary}>
           <div className={styles.summCard}>
             <span className={styles.summN}>{trips.length}</span>
@@ -77,7 +81,6 @@ const Dashboard = ({ user, isAuthenticated }) => {
           </div>
         </div>
 
-        {/* tabs */}
         <div className={styles.tabs}>
           {TABS.map((t) => (
             <button
@@ -86,27 +89,32 @@ const Dashboard = ({ user, isAuthenticated }) => {
               onClick={() => setTab(t)}
             >
               {t.charAt(0).toUpperCase() + t.slice(1)}
-              <span className={styles.tabCount}></span>
+              <span className={styles.tabCount}>{counts[t]}</span>
             </button>
           ))}
         </div>
 
-        {/* list */}
-        {trips.length > 0 ? (
+        {visibleTrips.length > 0 ? (
           <div className={styles.list}>
-            {trips.map((trip, i) => (
+            {visibleTrips.map((trip, i) => (
               <TripCard key={trip._id} trip={trip} index={i} onDelete={handleDelete} />
             ))}
           </div>
         ) : (
           <div className={styles.empty}>
-            <p className={styles.emptyTitle}>No trips here yet.</p>
-            <p className={styles.emptySub}>
-              Create your first trip to start building a packing list.
+            <p className={styles.emptyTitle}>
+              {tab === 'all' ? 'No trips here yet.' : `No ${tab} trips.`}
             </p>
-            <Link to="/create-trip" className={styles.newBtn} style={{ marginTop: 16 }}>
-              + New trip
-            </Link>
+            <p className={styles.emptySub}>
+              {tab === 'all'
+                ? 'Create your first trip to start building a packing list.'
+                : `You have no trips with status "${tab}".`}
+            </p>
+            {tab === 'all' && (
+              <Link to="/create-trip" className={styles.emptyBtn} style={{ marginTop: 16 }}>
+                + New trip
+              </Link>
+            )}
           </div>
         )}
       </div>
@@ -115,7 +123,11 @@ const Dashboard = ({ user, isAuthenticated }) => {
 };
 
 Dashboard.propTypes = {
-  user: PropTypes.shape({ name: PropTypes.string }),
+  user: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+    homeCity: PropTypes.string,
+  }),
   isAuthenticated: PropTypes.bool.isRequired,
 };
 Dashboard.defaultProps = { user: null, isAuthenticated: false };

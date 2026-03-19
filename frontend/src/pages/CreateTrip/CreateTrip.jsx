@@ -1,7 +1,7 @@
 // src/pages/CreateTrip/CreateTrip.js
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { climates, tripTypes, luggageTypes, climateEmoji, typeEmoji } from '../../utils/mockData';
+import { climates, tripTypes, luggageTypes, climateEmoji, typeEmoji } from '../../utils/constants';
 import styles from './CreateTrip.module.css';
 import { api } from '../../utils/api';
 import { toast } from 'sonner';

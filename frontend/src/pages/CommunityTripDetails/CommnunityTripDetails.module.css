@@ -1,0 +1,457 @@
+.page {
+    min-height: calc(100vh - 58px);
+    padding: 40px 0 80px;
+}
+
+.inner {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--ink-3);
+}
+
+.bcLink {
+    color: var(--blue-text);
+    font-weight: 500;
+}
+
+.bcLink:hover {
+    text-decoration: underline;
+}
+
+.bcSep {
+    color: var(--border-mid);
+}
+
+.bcCurrent {
+    color: var(--ink-2);
+}
+
+/* header */
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-bottom: 20px;
+    border-bottom: 0.5px solid var(--border);
+}
+
+.headerLeft {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.headerIcon {
+    width: 44px;
+    height: 44px;
+    background: var(--blue-bg);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.tripName {
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
+
+.tripMeta {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 3px;
+    text-transform: capitalize;
+}
+
+.statusBadge {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 99px;
+    text-transform: capitalize;
+}
+
+.status_planning {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.status_ongoing {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.status_completed {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.statsBox {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--bg-soft);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 24px;
+    flex-shrink: 0;
+    align-self: flex-start;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 0 20px;
+}
+
+.statN {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.statL {
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.statDivider {
+    width: 0.5px;
+    height: 32px;
+    background: var(--border);
+}
+
+/* tabs */
+.tabs {
+    display: flex;
+    border-bottom: 0.5px solid var(--border);
+}
+
+.tab {
+    padding: 9px 16px;
+    font-size: 13px;
+    color: var(--ink-3);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -0.5px;
+    transition: color 0.15s;
+    white-space: nowrap;
+}
+
+.tab:hover {
+    color: var(--ink);
+}
+
+.tabOn {
+    color: var(--ink);
+    font-weight: 500;
+    border-bottom-color: var(--blue);
+}
+
+.tabContent {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* packing list */
+.groups {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.groupTitle {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 6px;
+    border-bottom: 0.5px solid var(--border);
+}
+
+.groupCount {
+    background: var(--bg-soft);
+    color: var(--ink-3);
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 99px;
+}
+
+.groupItems {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.itemRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    transition: border-color 0.15s;
+}
+
+.itemChecked {
+    opacity: 0.55;
+    background: var(--bg-soft);
+}
+
+.itemChecked .itemName {
+    text-decoration: line-through;
+}
+
+.itemDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border-mid);
+    flex-shrink: 0;
+}
+
+.itemDotOn {
+    background: var(--blue);
+}
+
+.itemName {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.customBadge {
+    font-size: 10px;
+    font-weight: 500;
+    background: var(--amber-bg);
+    color: var(--amber-text);
+    padding: 2px 7px;
+    border-radius: 99px;
+}
+
+.packedBadge {
+    font-size: 10px;
+    font-weight: 500;
+    background: var(--green-bg);
+    color: var(--green-text);
+    padding: 2px 7px;
+    border-radius: 99px;
+}
+
+/* tips */
+.tipsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.tipsIntro {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.tipsIntro strong {
+    color: var(--ink);
+}
+
+.tipsBox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.addTipBtn {
+    padding: 8px 16px;
+    background: #111827;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.addTipBtn:hover {
+    background: #374151;
+}
+
+.tipLocked {
+    font-size: 12px;
+    color: #9ca3af;
+    font-style: italic;
+    white-space: nowrap;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+.tipLocked:hover {
+    color: var(--blue-text);
+}
+
+.tipForm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.tipInput {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+}
+
+.tipInput:focus {
+    border-color: #6b7280;
+}
+
+.tipTextarea {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    resize: vertical;
+    background: #fff;
+    font-family: inherit;
+}
+
+.tipTextarea:focus {
+    border-color: #6b7280;
+}
+
+.tipTagSection {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tipTagLabel {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.tipTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tipTag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1.5px solid #d1d5db;
+    background: transparent;
+    color: #6b7280;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.tipTag:hover {
+    border-color: #9ca3af;
+    color: #374151;
+}
+
+.tipTagOn {
+    background: #111827;
+    border-color: #111827;
+    color: #fff;
+}
+
+.tipFormActions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.tipSubmitBtn {
+    padding: 8px 20px;
+    background: #111827;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.tipSubmitBtn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+.tipCancelBtn {
+    padding: 8px 16px;
+    background: transparent;
+    color: #6b7280;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.tipCancelBtn:hover {
+    border-color: #9ca3af;
+    color: #374151;
+}
+
+.emptySub {
+    font-size: 13px;
+    color: var(--ink-3);
+}
+
+@media (max-width: 700px) {
+    .header {
+        flex-direction: column;
+    }
+
+    .statsBox {
+        width: 100%;
+        justify-content: center;
+    }
+}

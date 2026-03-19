@@ -15,14 +15,16 @@ const ProgressBar = ({ checked, total }) => {
       <div className={styles.track}>
         <div className={`${styles.fill} ${styles[`fill_${cls}`]}`} style={{ width: `${pct}%` }} />
       </div>
-      <p className={styles.sub}>{checked} of {total} items packed{pct === 100 ? ' — all done!' : ''}</p>
+      <p className={styles.sub}>
+        {checked} of {total} items packed{pct === 100 ? ' — all done!' : ''}
+      </p>
     </div>
   );
 };
 
 ProgressBar.propTypes = {
   checked: PropTypes.number.isRequired,
-  total:   PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired,
 };
 
 export default ProgressBar;

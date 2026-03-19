@@ -1,7 +1,6 @@
-// src/pages/TripDetail/TripDetail.js
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { mockPackingItems, mockTips, categories, climateEmoji } from '../../utils/mockData';
+import { categories, climateEmoji, tripTypes, climates } from '../../utils/constants';
 import PackingItem from '../../components/PackingItem/PackingItem';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import TipCard from '../../components/TipCard/TipCard';
@@ -9,13 +8,18 @@ import FilterBar from '../../components/FilterBar/FilterBar';
 import styles from './TripDetail.module.css';
 import { api } from '../../utils/api';
 import CenteredSpinner from '../../components/centeredSpinner';
+import PropTypes from 'prop-types';
 
 const catFilters = categories.map((c) => ({ value: c, label: c }));
+const statusOptions = ['planning', 'ongoing', 'completed'];
 
-const TripDetail = () => {
+const TripDetail = ({ userEmail }) => {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [trip, setTrip] = useState(null);
+  const [catalogItems, setCatalogItems] = useState([]);
+  const [tips, setTips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('list');
   const [catFilter, setCatFilter] = useState([]);
@@ -23,62 +27,57 @@ const TripDetail = () => {
   const [upvoted, setUpvoted] = useState([]);
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState('');
-
-  // ── Fetch ──────────────────────────────────────────────────────────────────
-
-  const fetchTrip = async () => {
-    try {
-      setLoading(true);
-      const data = await api.getTrip(id);
-      setTrip(data);
-      setEditName(data.tripName);
-    } catch (err) {
-      console.error('Failed to fetch trip:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [showTipForm, setShowTipForm] = useState(false);
+  const [tipForm, setTipForm] = useState({
+    title: '',
+    description: '',
+    tripTypeTags: [],
+    climateTags: [],
+  });
+  const [submittingTip, setSubmittingTip] = useState(false);
 
   useEffect(() => {
-    fetchTrip();
+    const fetchAll = async () => {
+      try {
+        setLoading(true);
+        const tripData = await api.getTrip(id);
+        setTrip(tripData);
+        setEditName(tripData.tripName);
+        const [itemsData, tipsData] = await Promise.all([
+          api.getItems(),
+          api.getTips({ tripType: tripData.tripType, climate: tripData.climate }),
+        ]);
+        setCatalogItems(itemsData);
+        setTips(tipsData);
+        setUpvoted(tipsData.filter((t) => t.upvotedBy?.includes(userEmail)).map((t) => t._id));
+      } catch (err) {
+        console.error('Failed to load trip data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAll();
   }, [id]);
 
-  // ── Derived values ─────────────────────────────────────────────────────────
-
   const tripItemIds = trip?.items.map((i) => String(i.itemId)) ?? [];
-
-  const catalogItems = mockPackingItems.filter(
+  const filteredCatalog = catalogItems.filter(
     (item) => catFilter.length === 0 || catFilter.includes(item.category)
   );
-
-  const relatedTips = mockTips.filter(
-    (t) => t?.tripTypeTags?.includes(trip?.tripType) || t?.climateTags?.includes(trip?.climate)
-  );
-
   const checked = trip?.items.filter((i) => i.isChecked).length ?? 0;
-
-  // ── Helpers ────────────────────────────────────────────────────────────────
-
-  // The backend uses array index for PATCH/DELETE on items,
-  // so we always resolve the index from the current trip.items array.
   const getIndex = (itemId) => trip.items.findIndex((i) => String(i.itemId) === String(itemId));
-
-  // ── Handlers ───────────────────────────────────────────────────────────────
 
   const toggleCheck = async (itemId) => {
     const index = getIndex(itemId);
     if (index === -1) return;
     const newChecked = !trip.items[index].isChecked;
-
     setTrip((p) => ({
       ...p,
       items: p.items.map((item, i) => (i === index ? { ...item, isChecked: newChecked } : item)),
     }));
-
     try {
       await api.toggleTripItem(id, index, newChecked);
     } catch (err) {
-      // Revert on failure
+      console.log('Failed to toggle item check:', err);
       setTrip((p) => ({
         ...p,
         items: p.items.map((item, i) => (i === index ? { ...item, isChecked: !newChecked } : item)),
@@ -88,13 +87,12 @@ const TripDetail = () => {
 
   const addToTrip = async (item) => {
     if (tripItemIds.includes(String(item._id))) return;
-
     const newItem = { itemId: item._id, isChecked: false, isCustom: false, customName: null };
     setTrip((p) => ({ ...p, items: [...p.items, newItem] }));
-
     try {
       await api.addTripItem(id, { itemId: item._id, isCustom: false, customName: '' });
     } catch (err) {
+      console.error('Failed to add item to trip:', err);
       setTrip((p) => ({
         ...p,
         items: p.items.filter((i) => String(i.itemId) !== String(item._id)),
@@ -106,13 +104,11 @@ const TripDetail = () => {
     const index = getIndex(itemId);
     if (index === -1) return;
     const removedItem = trip.items[index];
-
     setTrip((p) => ({ ...p, items: p.items.filter((_, i) => i !== index) }));
-
     try {
       await api.removeTripItem(id, index);
     } catch (err) {
-      // Revert — re-insert at original position
+      console.error('Failed to remove item from trip:', err);
       setTrip((p) => {
         const items = [...p.items];
         items.splice(index, 0, removedItem);
@@ -126,17 +122,13 @@ const TripDetail = () => {
     const name = customName.trim();
     const tempId = `custom_${Date.now()}`;
     const newItem = { itemId: tempId, isChecked: false, isCustom: true, customName: name };
-
     setTrip((p) => ({ ...p, items: [...p.items, newItem] }));
     setCustomName('');
-
     try {
       await api.addTripItem(id, { itemId: null, isCustom: true, customName: name });
     } catch (err) {
-      setTrip((p) => ({
-        ...p,
-        items: p.items.filter((i) => i.itemId !== tempId),
-      }));
+      console.error('Failed to add custom item:', err);
+      setTrip((p) => ({ ...p, items: p.items.filter((i) => i.itemId !== tempId) }));
       setCustomName(name);
     }
   };
@@ -145,30 +137,99 @@ const TripDetail = () => {
     const name = editName.trim();
     if (!name) return;
     const prevName = trip.tripName;
-
     setTrip((p) => ({ ...p, tripName: name }));
     setEditing(false);
-
     try {
       await api.updateTrip(id, { tripName: name });
     } catch (err) {
+      console.error('Failed to update trip name:', err);
       setTrip((p) => ({ ...p, tripName: prevName }));
       setEditName(prevName);
+    }
+  };
+
+  const changeStatus = async (newStatus) => {
+    const prevStatus = trip.status;
+    setTrip((p) => ({ ...p, status: newStatus }));
+    try {
+      await api.updateTrip(id, { status: newStatus });
+    } catch (err) {
+      console.error('Failed to update trip status:', err);
+      setTrip((p) => ({ ...p, status: prevStatus }));
     }
   };
 
   const handleDelete = async () => {
     if (!window.confirm('Delete this trip?')) return;
     try {
-      await api.delete(`/trips/${id}`);
+      await api.deleteTrip(id);
       navigate('/dashboard');
     } catch (err) {
       console.error('Failed to delete trip:', err);
-      alert('Could not delete trip. Please try again.');
     }
   };
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  const handleUpvote = async (tipId) => {
+    setUpvoted((p) => [...p, tipId]);
+    setTips((p) => p.map((t) => (t._id === tipId ? { ...t, upvoteCount: t.upvoteCount + 1 } : t)));
+    try {
+      await api.upvoteTip(tipId, userEmail);
+    } catch (err) {
+      console.error('Failed to upvote:', err);
+      setUpvoted((p) => p.filter((u) => u !== tipId));
+      setTips((p) =>
+        p.map((t) => (t._id === tipId ? { ...t, upvoteCount: t.upvoteCount - 1 } : t))
+      );
+    }
+  };
+
+  const handleRemoveUpvote = async (tipId) => {
+    setUpvoted((p) => p.filter((u) => u !== tipId));
+    setTips((p) => p.map((t) => (t._id === tipId ? { ...t, upvoteCount: t.upvoteCount - 1 } : t)));
+    try {
+      await api.removeUpvote(tipId, userEmail);
+    } catch (err) {
+      console.error('Failed to remove upvote:', err);
+      setUpvoted((p) => [...p, tipId]);
+      setTips((p) =>
+        p.map((t) => (t._id === tipId ? { ...t, upvoteCount: t.upvoteCount + 1 } : t))
+      );
+    }
+  };
+
+  const openTipForm = () => {
+    setTipForm({
+      title: '',
+      description: '',
+      tripTypeTags: [trip.tripType],
+      climateTags: [trip.climate],
+    });
+    setShowTipForm(true);
+  };
+
+  const toggleTag = (field, value) =>
+    setTipForm((p) => ({
+      ...p,
+      [field]: p[field].includes(value)
+        ? p[field].filter((t) => t !== value)
+        : [...p[field], value],
+    }));
+
+  const submitTip = async () => {
+    if (!tipForm.title.trim() || !tipForm.description.trim()) return;
+    setSubmittingTip(true);
+    try {
+      await api.createTip({ ...tipForm, email: userEmail });
+      const tipsData = await api.getTips({ tripType: trip.tripType, climate: trip.climate });
+      setTips(tipsData);
+      setUpvoted(tipsData.filter((t) => t.upvotedBy?.includes(userEmail)).map((t) => t._id));
+      setShowTipForm(false);
+    } catch (err) {
+      console.error('Failed to submit tip:', err);
+    } finally {
+      setSubmittingTip(false);
+    }
+  };
 
   if (loading) return <CenteredSpinner size="small" />;
 
@@ -186,7 +247,6 @@ const TripDetail = () => {
   return (
     <div className={styles.page}>
       <div className={`${styles.inner} container`}>
-        {/* breadcrumb */}
         <div className={styles.breadcrumb}>
           <Link to="/dashboard" className={styles.bcLink}>
             My trips
@@ -195,7 +255,6 @@ const TripDetail = () => {
           <span className={styles.bcCurrent}>{trip.tripName}</span>
         </div>
 
-        {/* header */}
         <div className={styles.header}>
           <div className={styles.headerLeft}>
             <div className={styles.headerIcon}>{climateEmoji[trip.climate] || '✈️'}</div>
@@ -240,6 +299,17 @@ const TripDetail = () => {
                 {trip.destination}, {trip.country} · {trip.durationDays}d · {trip.tripType} ·{' '}
                 {trip.climate} · {trip.luggageType}
               </p>
+              <div className={styles.statusRow}>
+                {statusOptions.map((s) => (
+                  <button
+                    key={s}
+                    className={`${styles.statusBtn} ${trip.status === s ? styles.statusBtnOn : ''} ${styles[`status_${s}`]}`}
+                    onClick={() => changeStatus(s)}
+                  >
+                    {s.charAt(0).toUpperCase() + s.slice(1)}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
           <div className={styles.progressBox}>
@@ -247,12 +317,11 @@ const TripDetail = () => {
           </div>
         </div>
 
-        {/* tabs */}
         <div className={styles.tabs}>
           {[
             { key: 'list', label: `My list (${trip.items.length})` },
             { key: 'catalog', label: 'Browse catalog' },
-            { key: 'tips', label: `Tips (${relatedTips.length})` },
+            { key: 'tips', label: `Tips (${tips.length})` },
           ].map((t) => (
             <button
               key={t.key}
@@ -264,7 +333,6 @@ const TripDetail = () => {
           ))}
         </div>
 
-        {/* ── My list ── */}
         {tab === 'list' && (
           <div className={styles.tabContent}>
             <div className={styles.customRow}>
@@ -291,11 +359,11 @@ const TripDetail = () => {
               </div>
             ) : (
               <div className={styles.groups}>
-                {categories.map((cat) => {
+                {[...categories, 'Custom'].map((cat) => {
                   const catItems = trip.items.filter((ti) => {
-                    if (ti.isCustom) return cat === 'Activity Gear';
-                    const m = mockPackingItems.find((m) => String(m._id) === String(ti.itemId));
-                    return m && m.category === cat;
+                    if (ti.isCustom) return cat === 'Custom';
+                    const master = catalogItems.find((m) => String(m._id) === String(ti.itemId));
+                    return master?.category === cat;
                   });
                   if (catItems.length === 0) return null;
                   return (
@@ -329,7 +397,7 @@ const TripDetail = () => {
                               </div>
                             );
                           }
-                          const master = mockPackingItems.find(
+                          const master = catalogItems.find(
                             (m) => String(m._id) === String(ti.itemId)
                           );
                           if (!master) return null;
@@ -353,7 +421,6 @@ const TripDetail = () => {
           </div>
         )}
 
-        {/* ── Catalog ── */}
         {tab === 'catalog' && (
           <div className={styles.tabContent}>
             <FilterBar
@@ -363,38 +430,114 @@ const TripDetail = () => {
               onChange={setCatFilter}
             />
             <div className={styles.catalogGrid}>
-              {catalogItems.map((item) => (
-                <PackingItem
-                  key={item._id}
-                  item={item}
-                  isInTrip={tripItemIds.includes(String(item._id))}
-                  onAddToTrip={addToTrip}
-                />
-              ))}
+              {filteredCatalog.map((item) => {
+                const tripItem = trip.items.find((ti) => String(ti.itemId) === String(item._id));
+                return (
+                  <PackingItem
+                    key={item._id}
+                    item={item}
+                    isInTrip={!!tripItem}
+                    isChecked={tripItem?.isChecked ?? false}
+                    onAddToTrip={addToTrip}
+                    onToggleCheck={toggleCheck}
+                    onRemoveFromTrip={removeFromTrip}
+                  />
+                );
+              })}
             </div>
           </div>
         )}
 
-        {/* ── Tips ── */}
         {tab === 'tips' && (
           <div className={styles.tabContent}>
-            <p className={styles.tipsIntro}>
-              Top community tips for <strong>{trip.tripType}</strong> trips in a{' '}
-              <strong>{trip.climate}</strong> climate.
-            </p>
+            <div className={styles.tipsHeader}>
+              <p className={styles.tipsIntro}>
+                Top community tips for <strong>{trip.tripType}</strong> trips in a{' '}
+                <strong>{trip.climate}</strong> climate.
+              </p>
+              {trip.status === 'completed' ? (
+                <button className={styles.addTipBtn} onClick={openTipForm}>
+                  + Add a tip
+                </button>
+              ) : (
+                <span className={styles.tipLocked}>Complete your trip to add a tip</span>
+              )}
+            </div>
+
+            {showTipForm && trip.status === 'completed' && (
+              <div className={styles.tipForm}>
+                <input
+                  className={styles.tipInput}
+                  placeholder="Title"
+                  value={tipForm.title}
+                  onChange={(e) => setTipForm((p) => ({ ...p, title: e.target.value }))}
+                />
+                <textarea
+                  className={styles.tipTextarea}
+                  placeholder="Describe your tip..."
+                  rows={3}
+                  value={tipForm.description}
+                  onChange={(e) => setTipForm((p) => ({ ...p, description: e.target.value }))}
+                />
+                <div className={styles.tipTagSection}>
+                  <p className={styles.tipTagLabel}>Trip types</p>
+                  <div className={styles.tipTags}>
+                    {tripTypes.map((t) => (
+                      <button
+                        key={t}
+                        className={`${styles.tipTag} ${tipForm.tripTypeTags.includes(t) ? styles.tipTagOn : ''}`}
+                        onClick={() => toggleTag('tripTypeTags', t)}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className={styles.tipTagSection}>
+                  <p className={styles.tipTagLabel}>Climates</p>
+                  <div className={styles.tipTags}>
+                    {climates.map((c) => (
+                      <button
+                        key={c}
+                        className={`${styles.tipTag} ${tipForm.climateTags.includes(c) ? styles.tipTagOn : ''}`}
+                        onClick={() => toggleTag('climateTags', c)}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className={styles.tipFormActions}>
+                  <button
+                    className={styles.tipSubmitBtn}
+                    onClick={submitTip}
+                    disabled={submittingTip || !tipForm.title.trim() || !tipForm.description.trim()}
+                  >
+                    {submittingTip ? 'Submitting...' : 'Submit tip'}
+                  </button>
+                  <button className={styles.tipCancelBtn} onClick={() => setShowTipForm(false)}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className={styles.tipsBox}>
-              {relatedTips.length === 0 ? (
+              {tips.length === 0 ? (
                 <p className={styles.emptySub}>No tips yet for this trip type.</p>
               ) : (
-                relatedTips.map((tip) => (
-                  <TipCard
-                    key={tip._id}
-                    tip={tip}
-                    hasUpvoted={upvoted.includes(tip._id)}
-                    onUpvote={(id) => setUpvoted((p) => [...p, id])}
-                    onRemoveUpvote={(id) => setUpvoted((p) => p.filter((u) => u !== id))}
-                  />
-                ))
+                [...tips]
+                  .sort((a, b) => (b.email === trip.email) - (a.email === trip.email))
+                  .map((tip) => (
+                    <TipCard
+                      key={tip._id}
+                      tip={tip}
+                      isOwner={tip.email === trip.email}
+                      hasUpvoted={upvoted.includes(tip._id)}
+                      onUpvote={handleUpvote}
+                      onRemoveUpvote={handleRemoveUpvote}
+                    />
+                  ))
               )}
             </div>
           </div>
@@ -402,6 +545,10 @@ const TripDetail = () => {
       </div>
     </div>
   );
+};
+
+TripDetail.propTypes = {
+  useEmail: PropTypes.string.isRequired,
 };
 
 export default TripDetail;

@@ -27,10 +27,7 @@ export default function CommunityTipsPage() {
   return (
     <div className="tips-page">
       <h1>Community Packing Tips</h1>
-      <select
-        value={filterTripType}
-        onChange={(e) => setFilterTripType(e.target.value)}
-      >
+      <select value={filterTripType} onChange={(e) => setFilterTripType(e.target.value)}>
         <option value="">All Trip Types</option>
         <option value="beach">Beach</option>
         <option value="hiking">Hiking</option>
@@ -39,11 +36,7 @@ export default function CommunityTipsPage() {
         <option value="business">Business</option>
       </select>
       <TipForm onTipAdded={fetchTips} />
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <TipList tips={tips} onUpdate={fetchTips} />
-      )}
+      {loading ? <p>Loading...</p> : <TipList tips={tips} onUpdate={fetchTips} />}
     </div>
   );
 }

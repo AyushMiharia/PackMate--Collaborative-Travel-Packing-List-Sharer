@@ -1,19 +1,20 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { climates, tripTypes, luggageTypes, climateEmoji, typeEmoji } from '../../utils/constants';
-import styles from './Community.module.css';
+import styles from './Trips.module.css';
 import { api } from '../../utils/api';
 import CenteredSpinner from '../../components/centeredSpinner';
 
-const PAGE_SIZE = 12;
 const STATUSES = ['planning', 'ongoing', 'completed'];
+const PAGE_SIZE = 12;
+
 const statusColor = {
   planning: styles.badgePlanning,
   ongoing: styles.badgeOngoing,
   completed: styles.badgeCompleted,
 };
 
-const Community = () => {
+const Trips = () => {
   const [trips, setTrips] = useState([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -21,14 +22,14 @@ const Community = () => {
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebounced] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [status, setStatus] = useState('');
   const [climate, setClimate] = useState('');
   const [tripType, setTripType] = useState('');
   const [luggageType, setLuggageType] = useState('');
 
   useEffect(() => {
-    const t = setTimeout(() => setDebounced(search), 350);
+    const t = setTimeout(() => setDebouncedSearch(search), 350);
     return () => clearTimeout(t);
   }, [search]);
 
@@ -41,12 +42,13 @@ const Community = () => {
       if (climate) params.climate = climate;
       if (tripType) params.tripType = tripType;
       if (luggageType) params.luggageType = luggageType;
+
       const data = await api.getTrips(params);
       setTrips(data.trips);
       setTotal(data.total);
       setTotalPages(data.totalPages);
     } catch (err) {
-      console.error('Failed to fetch trips:', err);
+      console.error('Failed to fetch community trips:', err);
     } finally {
       setLoading(false);
     }
@@ -55,11 +57,6 @@ const Community = () => {
   useEffect(() => {
     fetchTrips();
   }, [fetchTrips]);
-
-  const handleFilter = (setter) => (val) => {
-    setter(val);
-    setPage(1);
-  };
 
   const resetFilters = () => {
     setSearch('');
@@ -72,15 +69,18 @@ const Community = () => {
 
   const hasFilters = search || status || climate || tripType || luggageType;
 
+  const handleFilterChange = (setter) => (val) => {
+    setter(val);
+    setPage(1);
+  };
+
   return (
     <div className={styles.page}>
       <div className={`${styles.inner} container`}>
         <div className={styles.pageHeader}>
           <div>
-            <h1 className={styles.title}>Community</h1>
-            <p className={styles.sub}>
-              Browse trips from travellers around the world, see their packing lists and tips.
-            </p>
+            <h1 className={styles.title}>Community Trips</h1>
+            <p className={styles.sub}>Browse trips created by travellers around the world</p>
           </div>
           <span className={styles.totalBadge}>{total} trips</span>
         </div>
@@ -96,11 +96,12 @@ const Community = () => {
               setPage(1);
             }}
           />
+
           <div className={styles.filters}>
             <select
               className={styles.select}
               value={status}
-              onChange={(e) => handleFilter(setStatus)(e.target.value)}
+              onChange={(e) => handleFilterChange(setStatus)(e.target.value)}
             >
               <option value="">All statuses</option>
               {STATUSES.map((s) => (
@@ -109,10 +110,11 @@ const Community = () => {
                 </option>
               ))}
             </select>
+
             <select
               className={styles.select}
               value={climate}
-              onChange={(e) => handleFilter(setClimate)(e.target.value)}
+              onChange={(e) => handleFilterChange(setClimate)(e.target.value)}
             >
               <option value="">All climates</option>
               {climates.map((c) => (
@@ -121,10 +123,11 @@ const Community = () => {
                 </option>
               ))}
             </select>
+
             <select
               className={styles.select}
               value={tripType}
-              onChange={(e) => handleFilter(setTripType)(e.target.value)}
+              onChange={(e) => handleFilterChange(setTripType)(e.target.value)}
             >
               <option value="">All trip types</option>
               {tripTypes.map((t) => (
@@ -133,10 +136,11 @@ const Community = () => {
                 </option>
               ))}
             </select>
+
             <select
               className={styles.select}
               value={luggageType}
-              onChange={(e) => handleFilter(setLuggageType)(e.target.value)}
+              onChange={(e) => handleFilterChange(setLuggageType)(e.target.value)}
             >
               <option value="">All luggage</option>
               {luggageTypes.map((l) => (
@@ -145,6 +149,7 @@ const Community = () => {
                 </option>
               ))}
             </select>
+
             {hasFilters && (
               <button className={styles.clearBtn} onClick={resetFilters}>
                 Clear filters
@@ -169,10 +174,10 @@ const Community = () => {
           <>
             <div className={styles.grid}>
               {trips.map((trip) => (
-                <Link key={trip._id} to={`/community/${trip._id}`} className={styles.card}>
+                <Link key={trip._id} to={`/trips/${trip._id}`} className={styles.card}>
                   <div className={styles.cardTop}>
                     <span className={styles.cardIcon}>{climateEmoji[trip.climate] || '✈️'}</span>
-                    <span className={`${styles.badge} ${statusColor[trip.status] || ''}`}>
+                    <span className={`${styles.badge} ${statusColor[trip.status]}`}>
                       {trip.status}
                     </span>
                   </div>
@@ -217,7 +222,7 @@ const Community = () => {
                     }, [])
                     .map((p, i) =>
                       p === '...' ? (
-                        <span key={`e${i}`} className={styles.ellipsis}>
+                        <span key={`ellipsis-${i}`} className={styles.ellipsis}>
                           …
                         </span>
                       ) : (
@@ -247,4 +252,4 @@ const Community = () => {
   );
 };
 
-export default Community;
+export default Trips;

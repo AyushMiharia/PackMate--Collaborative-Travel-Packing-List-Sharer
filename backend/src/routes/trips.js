@@ -9,8 +9,34 @@ const requieAuth = passport.authenticate('jwt', { session: false })
 router.get('/', async (req, res) => {
   try {
     const db = getDb()
-    const trips = await db.collection('trips').find({}).toArray()
-    res.json(trips)
+    const filter = {}
+
+    if (req.query.status) filter.status = req.query.status
+    if (req.query.climate) filter.climate = req.query.climate
+    if (req.query.tripType) filter.tripType = req.query.tripType
+    if (req.query.luggageType) filter.luggageType = req.query.luggageType
+
+    if (req.query.search) {
+      const rx = new RegExp(req.query.search, 'i')
+      filter.$or = [{ tripName: rx }, { destination: rx }]
+    }
+
+    const page = Math.max(1, parseInt(req.query.page) || 1)
+    const limit = Math.max(1, parseInt(req.query.limit) || 12)
+    const skip = (page - 1) * limit
+
+    const [trips, total] = await Promise.all([
+      db
+        .collection('trips')
+        .find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .toArray(),
+      db.collection('trips').countDocuments(filter),
+    ])
+
+    res.json({ trips, total, page, totalPages: Math.ceil(total / limit) })
   } catch (err) {
     res.status(500).json({ error: err.message })
   }

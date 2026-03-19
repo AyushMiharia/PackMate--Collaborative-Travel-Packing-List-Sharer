@@ -14,6 +14,7 @@ import useAuth from '../hooks/useAuth';
 
 import '../styles/global.css';
 import Navbar from '../components/Navbar/Navbar';
+import CommunityTripDetail from '../pages/CommunityTripDetails/CommunityTripDetails';
 
 const RoutesProvider = () => {
   const { user, isAuthenticated, setIsAuthenticated } = useAuth();
@@ -26,6 +27,13 @@ const RoutesProvider = () => {
         setIsAuthenticated={setIsAuthenticated}
       />
       <Routes>
+        <Route path="/community" element={<Community />} />
+        <Route
+          path="/community/:id"
+          element={
+            <CommunityTripDetail userEmail={user?.email} isAuthenticated={isAuthenticated} />
+          }
+        />
         <Route element={<PageAccessWrapper />}>
           <Route
             path="/dashboard"
@@ -35,11 +43,9 @@ const RoutesProvider = () => {
             path="/create-trip"
             element={isAuthenticated ? <CreateTrip /> : <Navigate to="/login" replace />}
           />
-          <Route path="/trip/:id" element={<TripDetail />} />
-          <Route
-            path="/community"
-            element={<Community user={user} isAuthenticate={isAuthenticated} />}
-          />
+
+          <Route path="/trip/:id" element={<TripDetail userEmail={user?.email} />} />
+
           <Route
             path="/profile"
             element={

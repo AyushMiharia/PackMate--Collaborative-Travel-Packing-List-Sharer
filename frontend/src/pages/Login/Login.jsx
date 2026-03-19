@@ -1,8 +1,6 @@
 // src/pages/Login/Login.js
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { mockUser } from '../../utils/mockData';
 import styles from './Login.module.css';
 import { api } from '../../utils/api';
 import { toast } from 'sonner';

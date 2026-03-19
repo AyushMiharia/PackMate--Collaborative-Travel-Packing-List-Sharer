@@ -10,8 +10,8 @@ const router = express.Router()
 router.use('/api/auth', authRouter)
 router.use('/api/user', createUser)
 router.use('/api/trips', tripRouter)
+router.use('/api/tips', tipsRouter)
 router.use('/api/items', itemsRouter)
-router.get('/api/tips', tipsRouter)
 
 router.get('/test', (req, res) => {
   try {
