@@ -1,0 +1,112 @@
+/* src/components/Navbar/Navbar.module.css */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 0.5px solid var(--border);
+}
+.inner {
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.logoDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+  flex-shrink: 0;
+}
+.links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.link {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-2);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s, background 0.15s;
+  letter-spacing: 0.01em;
+}
+.link:hover { color: var(--ink); background: var(--bg-soft); }
+.linkActive {
+  color: var(--blue-text);
+  font-weight: 500;
+}
+.solidBtn {
+  margin-left: 6px;
+  padding: 7px 16px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+.solidBtn:hover { background: var(--blue-text); }
+.outlineBtn {
+  margin-left: 6px;
+  padding: 6px 14px;
+  border: 0.5px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--ink-2);
+  transition: all 0.15s;
+}
+.outlineBtn:hover { color: var(--ink); border-color: var(--ink); }
+
+/* hamburger */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+.bar {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--ink);
+  border-radius: 1px;
+  transition: transform 0.25s, opacity 0.25s;
+}
+.bar1Open { transform: translateY(6.5px) rotate(45deg); }
+.bar2Open { opacity: 0; }
+.bar3Open { transform: translateY(-6.5px) rotate(-45deg); }
+
+@media (max-width: 680px) {
+  .burger { display: flex; }
+  .links {
+    display: none;
+    position: absolute;
+    top: 58px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+    padding: 12px 24px 20px;
+    gap: 2px;
+  }
+  .linksOpen { display: flex; }
+  .solidBtn, .outlineBtn { margin-left: 0; align-self: flex-start; }
+}

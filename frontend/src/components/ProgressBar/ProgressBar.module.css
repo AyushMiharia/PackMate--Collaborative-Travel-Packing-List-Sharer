@@ -1,0 +1,16 @@
+/* src/components/ProgressBar/ProgressBar.module.css */
+.wrap { display: flex; flex-direction: column; gap: 6px; }
+.header { display: flex; justify-content: space-between; align-items: baseline; }
+.label { font-size: 12px; font-weight: 500; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.05em; }
+.pct { font-size: 22px; font-weight: 400; font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+.pct_blue  { color: var(--blue-text); }
+.pct_amber { color: var(--amber-text); }
+.pct_green { color: var(--green-text); }
+
+.track { height: 4px; background: var(--bg-hover); border-radius: 2px; overflow: hidden; }
+.fill  { height: 4px; border-radius: 2px; transition: width 0.5s ease; }
+.fill_blue  { background: var(--blue); }
+.fill_amber { background: var(--amber); }
+.fill_green { background: var(--green); }
+
+.sub { font-size: 12px; color: var(--ink-3); }

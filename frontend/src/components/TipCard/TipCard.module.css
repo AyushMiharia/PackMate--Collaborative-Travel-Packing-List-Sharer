@@ -1,0 +1,80 @@
+/* src/components/TipCard/TipCard.module.css */
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.row:last-child { border-bottom: none; }
+.left { flex: 1; min-width: 0; }
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.verified {
+  font-size: 11px;
+  color: var(--amber-text);
+  background: var(--amber-bg);
+  padding: 2px 7px;
+  border-radius: 99px;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.desc {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.tag {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 9px;
+  border-radius: 99px;
+  text-transform: capitalize;
+}
+.tag_blue  { background: var(--blue-bg);  color: var(--blue-text);  }
+.tag_green { background: var(--green-bg); color: var(--green-text); }
+.tag_amber { background: var(--amber-bg); color: var(--amber-text); }
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.upvote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 12px;
+  border: 0.5px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  transition: all 0.15s;
+  min-width: 48px;
+}
+.upvote:hover { border-color: var(--blue); color: var(--blue-text); }
+.upvoted { background: var(--blue-bg); border-color: var(--blue); color: var(--blue-text); }
+.arrow { font-size: 10px; }
+.count { font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.author {
+  font-size: 11px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}

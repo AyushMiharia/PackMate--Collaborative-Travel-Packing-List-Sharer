@@ -10,11 +10,7 @@ export const createUserInDb = async (userData) => {
     name: userData.name,
     email: userData.email.toLowerCase(),
     password: await hashPassword(userData.password),
-    major: userData.major,
-    graduationYear: userData.graduationYear,
-    favourites: [],
-    totalCheckIns: 0,
-    isAdmin: false,
+    homeCity: userData.homeCity,
     createdAt: new Date(),
     updatedAt: new Date(),
   }

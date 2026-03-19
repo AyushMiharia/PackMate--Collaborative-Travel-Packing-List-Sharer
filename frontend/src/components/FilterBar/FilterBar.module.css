@@ -1,0 +1,19 @@
+/* src/components/FilterBar/FilterBar.module.css */
+.wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); white-space: nowrap; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill {
+  padding: 5px 13px;
+  border: 0.5px solid var(--border-mid);
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-2);
+  background: transparent;
+  text-transform: capitalize;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.pill:hover { border-color: var(--blue); color: var(--blue-text); background: var(--blue-bg); }
+.pillOn { background: var(--ink); border-color: var(--ink); color: #fff; font-weight: 500; }
+.pillOn:hover { background: var(--blue-text); border-color: var(--blue-text); color: #fff; }

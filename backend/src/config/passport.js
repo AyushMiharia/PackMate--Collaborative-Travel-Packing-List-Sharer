@@ -1,7 +1,8 @@
 import passport from 'passport'
 import { Strategy as JwtStrategy } from 'passport-jwt'
+import { ObjectId } from 'mongodb'
 import { decrypt } from '../middleware/auth/dcrypt.js'
-import User from '../models/user.js'
+import { getDb } from '../config/mongo.js'
 
 const cookieExtractor = (req) => {
   let token = null
@@ -28,13 +29,18 @@ const jwtOptions = {
  */
 const jwtLogin = new JwtStrategy(jwtOptions, async (payload, done) => {
   try {
-    const user = await User.findById(payload.data._id)
+    const db = getDb()
+    const usersCollection = db.collection('users')
+
+    const user = await usersCollection.findOne({
+      _id: new ObjectId(payload.data._id),
+    })
 
     if (!user) {
       return done(null, false)
     }
 
-    return done(null, user.toJSON())
+    return done(null, user)
   } catch (err) {
     return done(err, false)
   }

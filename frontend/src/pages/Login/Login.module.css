@@ -1,0 +1,83 @@
+/* src/pages/Login/Login.module.css */
+.page {
+  min-height: calc(100vh - 58px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: var(--bg-soft);
+}
+.wrap {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.brand {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.brandDot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
+.card {
+  width: 100%;
+  background: var(--bg);
+  border: 0.5px solid var(--border-mid);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.title { font-size: 1.7rem; letter-spacing: -0.02em; color: var(--ink); }
+.sub   { font-size: 13px; color: var(--ink-3); margin-top: -4px; }
+
+.errorBox {
+  background: var(--red-bg);
+  border: 0.5px solid var(--red-text);
+  color: var(--red-text);
+  font-size: 12px;
+  padding: 9px 13px;
+  border-radius: var(--radius-sm);
+}
+.field { display: flex; flex-direction: column; gap: 5px; }
+.label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); }
+.input {
+  padding: 10px 13px;
+  border: 0.5px solid var(--border-mid);
+  border-radius: var(--radius-md);
+  font-size: 14px; color: var(--ink);
+  background: var(--bg-soft);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.input:focus { outline: none; border-color: var(--blue); background: var(--bg); box-shadow: 0 0 0 3px var(--blue-bg); }
+.inputErr { border-color: var(--red-text); }
+.err { font-size: 11px; color: var(--red-text); font-weight: 500; }
+
+.submitBtn {
+  padding: 11px;
+  background: var(--ink); color: #fff;
+  border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 500;
+  margin-top: 4px;
+  transition: background 0.15s;
+  border: none; width: 100%;
+}
+.submitBtn:hover:not(:disabled) { background: var(--blue-text); }
+.submitBtn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.switchText { text-align: center; font-size: 13px; color: var(--ink-3); }
+.switchLink { color: var(--blue-text); font-weight: 500; }
+.switchLink:hover { text-decoration: underline; }
+
+.hint {
+  font-size: 11px; color: var(--ink-3);
+  background: var(--bg); border: 0.5px solid var(--border);
+  padding: 6px 16px; border-radius: 99px;
+}

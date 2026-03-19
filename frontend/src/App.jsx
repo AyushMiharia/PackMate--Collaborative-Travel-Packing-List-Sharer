@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import UsersPage from './pages/UsersPage.jsx';
-import CommunityTipsPage from './pages/CommunityTipsPage.jsx';
+// src/App.js
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Toaster } from 'sonner';
+import './styles/global.css';
+import AuthProvider from './context/authContext';
+import RoutesProvider from './routes';
 
-export default function App() {
-  const [currentPage, setCurrentPage] = useState('tips');
-
+const App = () => {
   return (
-    <div>
-      <nav>
-        <button onClick={() => setCurrentPage('tips')}>Community Tips</button>
-        <button onClick={() => setCurrentPage('users')}>Users</button>
-      </nav>
-
-      {currentPage === 'tips' && <CommunityTipsPage />}
-      {currentPage === 'users' && <UsersPage />}
-    </div>
+    <Router>
+      <AuthProvider>
+        <RoutesProvider />
+        <Toaster position="top-right" style={{ top: '65px' }} duration={2000} />
+      </AuthProvider>
+    </Router>
   );
-}
+};
+
+export default App;

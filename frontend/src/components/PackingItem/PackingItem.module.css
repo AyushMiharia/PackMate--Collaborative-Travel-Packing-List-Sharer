@@ -1,0 +1,71 @@
+/* src/components/PackingItem/PackingItem.module.css */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  transition: border-color 0.15s, background 0.15s;
+}
+.row:hover { border-color: var(--border-mid); }
+.checked { opacity: 0.5; background: var(--bg-soft); }
+.checked .name { text-decoration: line-through; }
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border-mid);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.checkbox:hover { border-color: var(--blue); }
+.checkboxOn { background: var(--blue); border-color: var(--blue); }
+.tick { color: #fff; font-size: 11px; font-weight: 700; }
+
+.icon { font-size: 15px; flex-shrink: 0; }
+
+.info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.name { font-size: 13px; font-weight: 500; color: var(--ink); }
+.cat  { font-size: 11px; color: var(--ink-3); }
+
+.essential {
+  font-size: 10px;
+  font-weight: 500;
+  background: var(--blue-bg);
+  color: var(--blue-text);
+  padding: 2px 7px;
+  border-radius: 99px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.addBtn {
+  padding: 5px 12px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.addBtn:hover { background: var(--blue-text); }
+
+.removeBtn {
+  font-size: 11px;
+  color: var(--ink-3);
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.removeBtn:hover { color: var(--red-text); background: var(--red-bg); }

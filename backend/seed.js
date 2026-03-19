@@ -8,8 +8,31 @@ function hashPassword(password) {
   return crypto.createHash('sha256').update(password).digest('hex')
 }
 
-const tripTypes = ['beach', 'hiking', 'city', 'winter', 'business']
+// ------------------ CONSTANTS ------------------
+
+const tripTypes = [
+  'beach',
+  'hiking',
+  'city',
+  'winter',
+  'business',
+  'backpacking',
+]
 const climates = ['tropical', 'cold', 'dry', 'temperate']
+const luggageTypes = ['carry-on', 'backpack', 'checked']
+const tripStatuses = ['planning', 'ongoing', 'completed']
+
+const destinations = [
+  'Paris',
+  'Tokyo',
+  'New York',
+  'Bali',
+  'Sydney',
+  'Rome',
+  'Dubai',
+  'Bangkok',
+]
+
 const homeCities = [
   'Boston',
   'New York',
@@ -20,59 +43,6 @@ const homeCities = [
   'Miami',
   'Denver',
 ]
-
-const tipTexts = {
-  beach: [
-    'Always pack reef-safe sunscreen to protect coral reefs.',
-    'A dry bag is essential for keeping your phone safe near water.',
-    'Pack a microfiber towel — it dries fast and takes up no space.',
-    'Bring water shoes for rocky beaches.',
-    'A rashguard saves you from sunburn during long swim days.',
-    'Pack extra ziplock bags for wet swimsuits.',
-    'Flip flops are a must but bring one pair of sneakers too.',
-    'Aloe vera gel is a lifesaver after a long beach day.',
-  ],
-  hiking: [
-    'Merino wool socks prevent blisters better than cotton.',
-    'A headlamp is essential even for day hikes — emergencies happen.',
-    'Pack more water than you think you need.',
-    'Trekking poles save your knees on steep descents.',
-    'A lightweight rain jacket packs small but saves trips.',
-    'Always carry a basic first aid kit on trails.',
-    'Bring high-calorie snacks like trail mix and energy bars.',
-    'Break in new hiking boots before your trip.',
-  ],
-  city: [
-    'A crossbody bag is safer than a backpack in crowded cities.',
-    'Download offline maps before you arrive.',
-    'Pack a portable phone charger for long days of sightseeing.',
-    'Comfortable walking shoes are more important than stylish ones.',
-    'A light scarf doubles as a shawl for visiting religious sites.',
-    'Always carry a small amount of local cash.',
-    'Pack a reusable water bottle to save money and plastic.',
-    'A travel umbrella fits in any bag and saves you constantly.',
-  ],
-  winter: [
-    'Layer with moisture-wicking base layers, not just thick sweaters.',
-    'Hand warmers are cheap and take up almost no space.',
-    'Waterproof boots matter more than warm boots in wet snow.',
-    'A balaclava protects your face in extreme cold.',
-    'Pack lip balm and moisturizer — cold air dries out your skin fast.',
-    'Thermal underlayers let you pack fewer bulky sweaters.',
-    'Wool socks are warmer than synthetic ones in wet conditions.',
-    "Don't forget a hat — you lose most heat through your head.",
-  ],
-  business: [
-    'Pack a wrinkle-release spray to keep shirts looking fresh.',
-    'A universal power adapter is non-negotiable for international trips.',
-    'Keep all your important documents in one travel wallet.',
-    'Pack a spare dress shirt in your carry-on in case luggage is lost.',
-    'Noise-cancelling headphones make long flights productive.',
-    'A lightweight blazer works for meetings and dinners alike.',
-    "Carry business cards even if you think you won't need them.",
-    'Pack a portable laptop stand for better ergonomics in hotels.',
-  ],
-}
 
 const firstNames = [
   'Sarah',
@@ -91,6 +61,7 @@ const firstNames = [
   'Blake',
   'Quinn',
 ]
+
 const lastNames = [
   'Chen',
   'Lee',
@@ -109,53 +80,106 @@ const lastNames = [
   'Anderson',
 ]
 
+const tipTexts = {
+  beach: ['Pack sunscreen', 'Use dry bag', 'Bring flip flops'],
+  hiking: ['Carry water', 'Use trekking poles', 'Wear wool socks'],
+  city: ['Use crossbody bag', 'Carry charger', 'Wear comfy shoes'],
+  winter: ['Wear layers', 'Use hand warmers', 'Carry lip balm'],
+  business: ['Carry blazer', 'Keep documents', 'Use laptop stand'],
+  backpacking: ['Pack light', 'Use hostel locks', 'Carry power bank'],
+}
+
+// ------------------ SEED FUNCTION ------------------
+
 async function seed() {
   try {
     await client.connect()
     const db = client.db(process.env.DB_NAME)
 
-    // Clear existing data
-    await db.collection('users').deleteMany({})
-    await db.collection('communityTips').deleteMany({})
-    console.log('Cleared existing users and communityTips')
+    console.log('Clearing database...')
+    await Promise.all([
+      db.collection('users').deleteMany({}),
+      db.collection('trips').deleteMany({}),
+      db.collection('communityTips').deleteMany({}),
+    ])
 
-    // Seed 200 users
+    // ------------------ USERS (200) ------------------
     const users = []
+
     for (let i = 0; i < 200; i++) {
-      const firstName =
-        firstNames[Math.floor(Math.random() * firstNames.length)]
-      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)]
+      const first = firstNames[Math.floor(Math.random() * firstNames.length)]
+      const last = lastNames[Math.floor(Math.random() * lastNames.length)]
+
       users.push({
-        name: `${firstName} ${lastName}`,
-        email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@example.com`,
-        passwordHash: hashPassword('password123'),
+        name: `${first} ${last}`,
+        email: `${first.toLowerCase()}.${last.toLowerCase()}${i}@example.com`,
+        password: hashPassword('password123'),
         homeCity: homeCities[Math.floor(Math.random() * homeCities.length)],
-        submittedTips: [],
-        upvotedTips: [],
         createdAt: new Date(),
       })
     }
-    const insertedUsers = await db.collection('users').insertMany(users)
-    console.log(`Inserted ${users.length} users`)
 
-    // Seed 800 community tips
+    await db.collection('users').insertMany(users)
+    const userEmails = users.map((u) => u.email)
+
+    console.log('Inserted 200 users')
+
+    // ------------------ TRIPS (1000) ------------------
+    const trips = []
+
+    for (let i = 0; i < 1000; i++) {
+      const email = userEmails[Math.floor(Math.random() * userEmails.length)]
+
+      const destination =
+        destinations[Math.floor(Math.random() * destinations.length)]
+
+      const startDate = new Date(
+        Date.now() + Math.floor(Math.random() * 10000000000),
+      )
+
+      const duration = Math.floor(Math.random() * 10) + 2
+      const endDate = new Date(startDate.getTime() + duration * 86400000)
+
+      const tripType = tripTypes[Math.floor(Math.random() * tripTypes.length)]
+
+      trips.push({
+        email, // ✅ matches your schema
+        tripName: `${destination} Trip`,
+        destination,
+        climate: climates[Math.floor(Math.random() * climates.length)],
+        tripType,
+        durationDays: duration,
+        luggageType:
+          luggageTypes[Math.floor(Math.random() * luggageTypes.length)],
+        startDate: startDate.toISOString().split('T')[0], // YYYY-MM-DD
+        endDate: endDate.toISOString().split('T')[0],
+        status: tripStatuses[Math.floor(Math.random() * tripStatuses.length)],
+        items: [], // ✅ as per your schema
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+    }
+
+    await db.collection('trips').insertMany(trips)
+    console.log('Inserted 1000 trips')
+
+    // ------------------ COMMUNITY TIPS (800) ------------------
     const tips = []
-    const userIds = Object.values(insertedUsers.insertedIds)
 
     for (let i = 0; i < 800; i++) {
+      const email = userEmails[Math.floor(Math.random() * userEmails.length)]
+
       const tripType = tripTypes[Math.floor(Math.random() * tripTypes.length)]
-      const tipOptions = tipTexts[tripType]
-      const tip = tipOptions[Math.floor(Math.random() * tipOptions.length)]
-      const authorId = userIds[Math.floor(Math.random() * userIds.length)]
+
+      const tipList = tipTexts[tripType]
 
       tips.push({
-        title: `${tripType.charAt(0).toUpperCase() + tripType.slice(1)} Tip`,
-        description: tip,
-        authorId,
+        email,
+        title: `${tripType} travel tip`,
+        description: tipList[Math.floor(Math.random() * tipList.length)],
         tripTypeTags: [tripType],
         climateTags: [climates[Math.floor(Math.random() * climates.length)]],
-        upvoteCount: Math.floor(Math.random() * 100),
-        upvotedBy: [],
+        upvoteCount: Math.floor(Math.random() * 200),
         isVerified: Math.random() > 0.8,
         isFeatured: Math.random() > 0.9,
         createdAt: new Date(
@@ -163,14 +187,21 @@ async function seed() {
         ),
       })
     }
-    await db.collection('communityTips').insertMany(tips)
-    console.log(`Inserted ${tips.length} community tips`)
 
-    console.log(
-      'Seeding complete! Total records: ' + (users.length + tips.length),
-    )
+    await db.collection('communityTips').insertMany(tips)
+    console.log('Inserted 800 community tips')
+
+    // ------------------ INDEXES ------------------
+    await db.collection('users').createIndex({ email: 1 }, { unique: true })
+    await db.collection('trips').createIndex({ email: 1 })
+    await db.collection('communityTips').createIndex({ email: 1 })
+
+    console.log('Indexes created')
+
+    console.log('✅ Seeding Complete!')
+    console.log('Total Records: 2000')
   } catch (err) {
-    console.error('Seeding failed', err)
+    console.error('❌ Seeding failed:', err)
   } finally {
     await client.close()
   }
