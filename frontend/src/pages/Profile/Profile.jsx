@@ -54,6 +54,7 @@ const Profile = ({ user, isAuthenticated }) => {
       navigate('/');
       toast.success('Logged out successfully!');
     } catch (error) {
+      console.error('Logout failed:', error);
       toast.error('Logout failed. Please try again.');
     }
   };

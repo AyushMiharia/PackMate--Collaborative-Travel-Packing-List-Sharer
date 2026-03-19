@@ -1,11 +1,8 @@
-// src/pages/Home/Home.js
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { mockTips } from '../../utils/mockData';
-import TipCard from '../../components/TipCard/TipCard';
+import { useState, useEffect } from 'react';
 import styles from './Home.module.css';
-
-const featured = mockTips.filter((t) => t.isFeatured).slice(0, 3);
+import { api } from '../../utils/api';
+import { climateEmoji, typeEmoji } from '../../utils/constants';
 
 const steps = [
   {
@@ -55,8 +52,26 @@ const personas = [
   },
 ];
 
+const statusColor = {
+  planning: styles.badgePlanning,
+  ongoing: styles.badgeOngoing,
+  completed: styles.badgeCompleted,
+};
+
 const Home = () => {
-  const [upvoted, setUpvoted] = useState([]);
+  const [trips, setTrips] = useState([]);
+
+  useEffect(() => {
+    const fetchTrips = async () => {
+      try {
+        const data = await api.getTrips({ limit: 6, page: 1 });
+        setTrips(data.trips ?? []);
+      } catch (err) {
+        console.error('Failed to fetch trips:', err);
+      }
+    };
+    fetchTrips();
+  }, []);
 
   return (
     <main>
@@ -79,7 +94,7 @@ const Home = () => {
                 Start packing free
               </Link>
               <Link to="/community" className={styles.ctaGhost}>
-                Browse community tips →
+                Browse community trips →
               </Link>
             </div>
           </div>
@@ -131,8 +146,8 @@ const Home = () => {
       <div className={styles.statsBar}>
         <div className={`${styles.statsInner} container`}>
           {[
-            { n: '12,400+', l: 'Trips created' },
-            { n: '3,800+', l: 'Community tips' },
+            { n: '2,500+', l: 'Trips created' },
+            { n: '1,000+', l: 'Community tips' },
             { n: '98%', l: 'Said it saved time' },
             { n: '25+', l: 'Trip categories' },
           ].map((s) => (
@@ -163,26 +178,55 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── Featured tips ── */}
-      <section className={styles.tipsSection}>
-        <div className={`${styles.tipsSectionInner} container`}>
+      {/* ── Recent community trips ── */}
+      <section className={styles.tripsSection}>
+        <div className={`${styles.tripsSectionInner} container`}>
           <div className={styles.sectionHead}>
-            <h2 className={styles.sectionTitle}>Trending community tips</h2>
+            <div>
+              <h2 className={styles.sectionTitle}>Recent community trips</h2>
+              <p className={styles.sectionSub}>See what other travellers are packing for.</p>
+            </div>
             <Link to="/community" className={styles.seeAll}>
-              See all →
+              Browse all →
             </Link>
           </div>
-          <div className={styles.tipsBox}>
-            {featured.map((tip) => (
-              <TipCard
-                key={tip._id}
-                tip={tip}
-                hasUpvoted={upvoted.includes(tip._id)}
-                onUpvote={(id) => setUpvoted((p) => [...p, id])}
-                onRemoveUpvote={(id) => setUpvoted((p) => p.filter((u) => u !== id))}
-              />
-            ))}
-          </div>
+
+          {trips.length === 0 ? (
+            <p className={styles.tripsEmpty}>No trips yet. Be the first to create one!</p>
+          ) : (
+            <div className={styles.tripsGrid}>
+              {trips.map((trip) => (
+                <Link key={trip._id} to={`/community/${trip._id}`} className={styles.tripCard}>
+                  <div className={styles.tripCardTop}>
+                    <span className={styles.tripCardIcon}>
+                      {climateEmoji[trip.climate] || '✈️'}
+                    </span>
+                    <span className={`${styles.badge} ${statusColor[trip.status] || ''}`}>
+                      {trip.status}
+                    </span>
+                  </div>
+                  <h3 className={styles.tripCardName}>{trip.tripName}</h3>
+                  <p className={styles.tripCardMeta}>
+                    {trip.destination}
+                    {trip.country ? `, ${trip.country}` : ''}
+                  </p>
+                  <div className={styles.tripCardTags}>
+                    <span className={styles.tag}>
+                      {typeEmoji[trip.tripType]} {trip.tripType}
+                    </span>
+                    <span className={styles.tag}>{trip.durationDays}d</span>
+                    <span className={styles.tag}>{trip.luggageType}</span>
+                  </div>
+                  <div className={styles.tripCardFooter}>
+                    <span className={styles.tripItemCount}>{trip.items.length} items</span>
+                    <span className={styles.tripPacked}>
+                      {trip.items.filter((i) => i.isChecked).length}/{trip.items.length} packed
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

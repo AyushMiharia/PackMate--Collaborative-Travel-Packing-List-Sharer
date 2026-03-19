@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { categories, climateEmoji, climates, tripTypes } from '../../utils/mockData';
+import PropTypes from 'prop-types';
+import { categories, climateEmoji, climates, tripTypes } from '../../utils/constants';
 import TipCard from '../../components/TipCard/TipCard';
 import styles from './CommnunityTripDetails.module.css';
 import { api } from '../../utils/api';
@@ -59,7 +60,6 @@ const CommunityTripDetail = ({ userEmail, isAuthenticated }) => {
     fetchAll();
   }, [id, userEmail, isAuthenticated]);
 
-  // Eligibility: user has a completed trip with same tripType OR climate
   const isEligible =
     isAuthenticated &&
     myTrips.some(
@@ -73,6 +73,7 @@ const CommunityTripDetail = ({ userEmail, isAuthenticated }) => {
     try {
       await api.upvoteTip(tipId, userEmail);
     } catch (err) {
+      console.error('Failed to upvote:', err);
       setUpvoted((p) => p.filter((u) => u !== tipId));
       setTips((p) =>
         p.map((t) => (t._id === tipId ? { ...t, upvoteCount: t.upvoteCount - 1 } : t))
@@ -86,6 +87,7 @@ const CommunityTripDetail = ({ userEmail, isAuthenticated }) => {
     try {
       await api.removeUpvote(tipId, userEmail);
     } catch (err) {
+      console.error('Failed to remove upvote:', err);
       setUpvoted((p) => [...p, tipId]);
       setTips((p) =>
         p.map((t) => (t._id === tipId ? { ...t, upvoteCount: t.upvoteCount + 1 } : t))
@@ -347,6 +349,15 @@ const CommunityTripDetail = ({ userEmail, isAuthenticated }) => {
       </div>
     </div>
   );
+};
+
+CommunityTripDetail.propTypes = {
+  userEmail: PropTypes.string,
+  isAuthenticated: PropTypes.bool.isRequired,
+};
+
+CommunityTripDetail.defaultProps = {
+  userEmail: null,
 };
 
 export default CommunityTripDetail;

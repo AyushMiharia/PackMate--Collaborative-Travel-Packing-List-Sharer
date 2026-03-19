@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { categories, climateEmoji, tripTypes, climates } from '../../utils/mockData';
+import { categories, climateEmoji, tripTypes, climates } from '../../utils/constants';
 import PackingItem from '../../components/PackingItem/PackingItem';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import TipCard from '../../components/TipCard/TipCard';
@@ -8,6 +8,7 @@ import FilterBar from '../../components/FilterBar/FilterBar';
 import styles from './TripDetail.module.css';
 import { api } from '../../utils/api';
 import CenteredSpinner from '../../components/centeredSpinner';
+import PropTypes from 'prop-types';
 
 const catFilters = categories.map((c) => ({ value: c, label: c }));
 const statusOptions = ['planning', 'ongoing', 'completed'];
@@ -76,6 +77,7 @@ const TripDetail = ({ userEmail }) => {
     try {
       await api.toggleTripItem(id, index, newChecked);
     } catch (err) {
+      console.log('Failed to toggle item check:', err);
       setTrip((p) => ({
         ...p,
         items: p.items.map((item, i) => (i === index ? { ...item, isChecked: !newChecked } : item)),
@@ -90,6 +92,7 @@ const TripDetail = ({ userEmail }) => {
     try {
       await api.addTripItem(id, { itemId: item._id, isCustom: false, customName: '' });
     } catch (err) {
+      console.error('Failed to add item to trip:', err);
       setTrip((p) => ({
         ...p,
         items: p.items.filter((i) => String(i.itemId) !== String(item._id)),
@@ -105,6 +108,7 @@ const TripDetail = ({ userEmail }) => {
     try {
       await api.removeTripItem(id, index);
     } catch (err) {
+      console.error('Failed to remove item from trip:', err);
       setTrip((p) => {
         const items = [...p.items];
         items.splice(index, 0, removedItem);
@@ -123,6 +127,7 @@ const TripDetail = ({ userEmail }) => {
     try {
       await api.addTripItem(id, { itemId: null, isCustom: true, customName: name });
     } catch (err) {
+      console.error('Failed to add custom item:', err);
       setTrip((p) => ({ ...p, items: p.items.filter((i) => i.itemId !== tempId) }));
       setCustomName(name);
     }
@@ -137,6 +142,7 @@ const TripDetail = ({ userEmail }) => {
     try {
       await api.updateTrip(id, { tripName: name });
     } catch (err) {
+      console.error('Failed to update trip name:', err);
       setTrip((p) => ({ ...p, tripName: prevName }));
       setEditName(prevName);
     }
@@ -148,6 +154,7 @@ const TripDetail = ({ userEmail }) => {
     try {
       await api.updateTrip(id, { status: newStatus });
     } catch (err) {
+      console.error('Failed to update trip status:', err);
       setTrip((p) => ({ ...p, status: prevStatus }));
     }
   };
@@ -168,6 +175,7 @@ const TripDetail = ({ userEmail }) => {
     try {
       await api.upvoteTip(tipId, userEmail);
     } catch (err) {
+      console.error('Failed to upvote:', err);
       setUpvoted((p) => p.filter((u) => u !== tipId));
       setTips((p) =>
         p.map((t) => (t._id === tipId ? { ...t, upvoteCount: t.upvoteCount - 1 } : t))
@@ -181,6 +189,7 @@ const TripDetail = ({ userEmail }) => {
     try {
       await api.removeUpvote(tipId, userEmail);
     } catch (err) {
+      console.error('Failed to remove upvote:', err);
       setUpvoted((p) => [...p, tipId]);
       setTips((p) =>
         p.map((t) => (t._id === tipId ? { ...t, upvoteCount: t.upvoteCount + 1 } : t))
@@ -536,6 +545,10 @@ const TripDetail = ({ userEmail }) => {
       </div>
     </div>
   );
+};
+
+TripDetail.propTypes = {
+  useEmail: PropTypes.string.isRequired,
 };
 
 export default TripDetail;

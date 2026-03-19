@@ -34,7 +34,7 @@ export const api = {
       body: JSON.stringify(d),
       credentials: 'include',
     }).then(handle),
-  logout: (d) =>
+  logout: () =>
     fetch(`${BASE}/api/auth/logout`, {
       method: 'POST',
       headers: json(),

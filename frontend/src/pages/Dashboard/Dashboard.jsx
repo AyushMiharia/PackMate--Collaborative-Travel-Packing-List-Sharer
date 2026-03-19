@@ -123,7 +123,11 @@ const Dashboard = ({ user, isAuthenticated }) => {
 };
 
 Dashboard.propTypes = {
-  user: PropTypes.shape({ name: PropTypes.string }),
+  user: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+    homeCity: PropTypes.string,
+  }),
   isAuthenticated: PropTypes.bool.isRequired,
 };
 Dashboard.defaultProps = { user: null, isAuthenticated: false };

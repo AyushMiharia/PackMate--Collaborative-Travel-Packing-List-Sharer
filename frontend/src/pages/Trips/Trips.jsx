@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { climates, tripTypes, luggageTypes, climateEmoji, typeEmoji } from '../../utils/mockData';
+import { climates, tripTypes, luggageTypes, climateEmoji, typeEmoji } from '../../utils/constants';
 import styles from './Trips.module.css';
 import { api } from '../../utils/api';
 import CenteredSpinner from '../../components/centeredSpinner';

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import '../../css/UserForm.css';
 
 export default function UserForm({ onUserAdded }) {
   const [name, setName] = useState('');

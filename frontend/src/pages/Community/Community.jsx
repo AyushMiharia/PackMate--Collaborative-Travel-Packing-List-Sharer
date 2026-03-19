@@ -4,7 +4,7 @@ import { climates, tripTypes, luggageTypes, climateEmoji, typeEmoji } from '../.
 import styles from './Community.module.css';
 import { api } from '../../utils/api';
 import CenteredSpinner from '../../components/centeredSpinner';
- 
+
 const PAGE_SIZE = 12;
 const STATUSES = ['planning', 'ongoing', 'completed'];
 const statusColor = {
@@ -12,26 +12,26 @@ const statusColor = {
   ongoing: styles.badgeOngoing,
   completed: styles.badgeCompleted,
 };
- 
+
 const Community = () => {
   const [trips, setTrips] = useState([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
- 
+
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebounced] = useState('');
   const [status, setStatus] = useState('');
   const [climate, setClimate] = useState('');
   const [tripType, setTripType] = useState('');
   const [luggageType, setLuggageType] = useState('');
- 
+
   useEffect(() => {
     const t = setTimeout(() => setDebounced(search), 350);
     return () => clearTimeout(t);
   }, [search]);
- 
+
   const fetchTrips = useCallback(async () => {
     try {
       setLoading(true);
@@ -51,16 +51,16 @@ const Community = () => {
       setLoading(false);
     }
   }, [page, debouncedSearch, status, climate, tripType, luggageType]);
- 
+
   useEffect(() => {
     fetchTrips();
   }, [fetchTrips]);
- 
+
   const handleFilter = (setter) => (val) => {
     setter(val);
     setPage(1);
   };
- 
+
   const resetFilters = () => {
     setSearch('');
     setStatus('');
@@ -69,9 +69,9 @@ const Community = () => {
     setLuggageType('');
     setPage(1);
   };
- 
+
   const hasFilters = search || status || climate || tripType || luggageType;
- 
+
   return (
     <div className={styles.page}>
       <div className={`${styles.inner} container`}>
@@ -84,7 +84,7 @@ const Community = () => {
           </div>
           <span className={styles.totalBadge}>{total} trips</span>
         </div>
- 
+
         <div className={styles.toolbar}>
           <input
             className={styles.search}
@@ -152,7 +152,7 @@ const Community = () => {
             )}
           </div>
         </div>
- 
+
         {loading ? (
           <CenteredSpinner size="small" />
         ) : trips.length === 0 ? (
@@ -197,7 +197,7 @@ const Community = () => {
                 </Link>
               ))}
             </div>
- 
+
             {totalPages > 1 && (
               <div className={styles.pagination}>
                 <button
@@ -246,5 +246,5 @@ const Community = () => {
     </div>
   );
 };
- 
+
 export default Community;

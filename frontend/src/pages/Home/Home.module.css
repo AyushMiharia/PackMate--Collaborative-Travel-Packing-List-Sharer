@@ -5,14 +5,17 @@
   padding: 72px 0 80px;
   border-bottom: 0.5px solid var(--border);
 }
+
 .heroInner {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 56px;
   align-items: center;
 }
+
 .heroText {
 }
+
 .eyebrow {
   display: inline-block;
   font-size: 11px;
@@ -25,6 +28,7 @@
   border-radius: 99px;
   margin-bottom: 24px;
 }
+
 .heroTitle {
   font-size: clamp(2.2rem, 4vw, 3.2rem);
   line-height: 1.1;
@@ -32,11 +36,13 @@
   color: var(--ink);
   margin-bottom: 20px;
 }
+
 .heroTitle em {
   font-style: normal;
   color: var(--blue-text);
   font-weight: 600;
 }
+
 .heroSub {
   font-size: 15px;
   color: var(--ink-2);
@@ -45,11 +51,13 @@
   margin-bottom: 32px;
   font-weight: 300;
 }
+
 .heroCtas {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
+
 .ctaSolid {
   padding: 11px 24px;
   background: var(--ink);
@@ -59,9 +67,11 @@
   font-weight: 500;
   transition: background 0.15s;
 }
+
 .ctaSolid:hover {
   background: var(--blue-text);
 }
+
 .ctaGhost {
   padding: 11px 20px;
   border: 0.5px solid var(--border-mid);
@@ -70,6 +80,7 @@
   color: var(--ink-2);
   transition: all 0.15s;
 }
+
 .ctaGhost:hover {
   border-color: var(--blue);
   color: var(--blue-text);
@@ -86,16 +97,19 @@
   flex-direction: column;
   gap: 18px;
 }
+
 .heroCardHeader {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
 }
+
 .heroCardLeft {
   display: flex;
   align-items: center;
   gap: 12px;
 }
+
 .heroCardIcon {
   width: 36px;
   height: 36px;
@@ -106,16 +120,19 @@
   justify-content: center;
   font-size: 16px;
 }
+
 .heroCardName {
   font-size: 14px;
   font-weight: 500;
   color: var(--ink);
 }
+
 .heroCardMeta {
   font-size: 12px;
   color: var(--ink-3);
   margin-top: 1px;
 }
+
 .heroBadge {
   font-size: 11px;
   font-weight: 500;
@@ -126,16 +143,19 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+
 .heroCardProgress {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
+
 .heroProgressHeader {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
 }
+
 .heroProgressLabel {
   font-size: 11px;
   text-transform: uppercase;
@@ -143,23 +163,27 @@
   color: var(--ink-3);
   font-weight: 500;
 }
+
 .heroProgressPct {
   font-size: 18px;
   font-family: var(--font-display);
   color: var(--blue-text);
 }
+
 .heroTrack {
   height: 4px;
   background: var(--bg-hover);
   border-radius: 2px;
   overflow: hidden;
 }
+
 .heroFill {
   height: 4px;
   width: 40%;
   background: var(--blue);
   border-radius: 2px;
 }
+
 .heroProgressSub {
   font-size: 12px;
   color: var(--ink-3);
@@ -170,6 +194,7 @@
   flex-direction: column;
   gap: 8px;
 }
+
 .heroItem {
   display: flex;
   align-items: center;
@@ -179,12 +204,15 @@
   border-radius: var(--radius-sm);
   transition: opacity 0.2s;
 }
+
 .heroItemDone {
   opacity: 0.45;
 }
+
 .heroItemDone .heroItemName {
   text-decoration: line-through;
 }
+
 .heroCheck {
   width: 18px;
   height: 18px;
@@ -198,10 +226,12 @@
   color: #fff;
   flex-shrink: 0;
 }
+
 .heroCheckOn {
   background: var(--blue);
   border-color: var(--blue);
 }
+
 .heroItemName {
   font-size: 13px;
   color: var(--ink);
@@ -213,15 +243,18 @@
   border-bottom: 0.5px solid var(--border);
   padding: 28px 0;
 }
+
 .statsInner {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
   gap: 20px;
 }
+
 .stat {
   text-align: center;
 }
+
 .statN {
   display: block;
   font-family: var(--font-display);
@@ -230,6 +263,7 @@
   line-height: 1;
   margin-bottom: 3px;
 }
+
 .statL {
   font-size: 12px;
   color: var(--ink-3);
@@ -242,6 +276,7 @@
 .section {
   padding: 72px 0;
 }
+
 .sectionHead {
   display: flex;
   align-items: baseline;
@@ -250,21 +285,26 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+
 .sectionTitle {
   font-size: 1.7rem;
   letter-spacing: -0.02em;
   color: var(--ink);
 }
+
 .sectionSub {
   font-size: 14px;
   color: var(--ink-3);
   margin-top: 4px;
 }
+
 .seeAll {
   font-size: 13px;
   font-weight: 500;
   color: var(--blue-text);
+  white-space: nowrap;
 }
+
 .seeAll:hover {
   text-decoration: underline;
 }
@@ -275,6 +315,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
+
 .step {
   padding: 28px 24px;
   border: 0.5px solid var(--border);
@@ -284,10 +325,12 @@
     border-color 0.15s,
     box-shadow 0.15s;
 }
+
 .step:hover {
   border-color: var(--border-mid);
   box-shadow: var(--shadow-sm);
 }
+
 .stepNum {
   display: inline-block;
   font-family: var(--font-display);
@@ -296,15 +339,19 @@
   margin-bottom: 12px;
   opacity: 0.4;
 }
+
 .stepNum_blue {
   color: var(--blue);
 }
+
 .stepNum_amber {
   color: var(--amber);
 }
+
 .stepNum_green {
   color: var(--green);
 }
+
 .stepTitle {
   font-size: 1rem;
   font-weight: 500;
@@ -312,26 +359,140 @@
   margin-bottom: 8px;
   font-family: var(--font-body);
 }
+
 .stepDesc {
   font-size: 13px;
   color: var(--ink-2);
   line-height: 1.6;
 }
 
-/* ── Tips section ── */
-.tipsSection {
+/* ── Trips section ── */
+.tripsSection {
   background: var(--bg-soft);
   border-top: 0.5px solid var(--border);
   border-bottom: 0.5px solid var(--border);
   padding: 72px 0;
 }
-.tipsSectionInner {
+
+.tripsSectionInner {
 }
-.tipsBox {
+
+.tripsEmpty {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.tripsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.tripCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
   border: 0.5px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--bg);
-  padding: 0 24px;
+  text-decoration: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.tripCard:hover {
+  border-color: var(--border-mid);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.tripCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tripCardIcon {
+  font-size: 1.4rem;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 99px;
+  text-transform: capitalize;
+  letter-spacing: 0.03em;
+}
+
+.badgePlanning {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.badgeOngoing {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.badgeCompleted {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.tripCardName {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tripCardMeta {
+  font-size: 12px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tripCardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tag {
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--bg-soft);
+  border: 0.5px solid var(--border);
+  color: var(--ink-2);
+  padding: 2px 8px;
+  border-radius: 99px;
+  text-transform: capitalize;
+}
+
+.tripCardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 0.5px solid var(--border);
+}
+
+.tripItemCount {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.tripPacked {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--blue-text);
 }
 
 /* ── Personas ── */
@@ -340,6 +501,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
+
 .personaCard {
   display: flex;
   flex-direction: column;
@@ -350,17 +512,21 @@
   background: var(--bg);
   transition: border-color 0.15s;
 }
+
 .personaCard:hover {
   border-color: var(--border-mid);
 }
+
 .personaEmoji {
   font-size: 1.6rem;
 }
+
 .personaName {
   font-size: 14px;
   font-weight: 500;
   color: var(--ink);
 }
+
 .personaRole {
   font-size: 11px;
   text-transform: uppercase;
@@ -369,6 +535,7 @@
   font-weight: 500;
   margin: 2px 0 6px;
 }
+
 .personaDesc {
   font-size: 13px;
   color: var(--ink-2);
@@ -380,15 +547,18 @@
   padding: 80px 0;
   border-top: 0.5px solid var(--border);
 }
+
 .ctaInner {
   text-align: center;
 }
+
 .ctaTitle {
   font-size: 2.2rem;
   letter-spacing: -0.02em;
   margin-bottom: 12px;
   color: var(--ink);
 }
+
 .ctaSub {
   font-size: 14px;
   color: var(--ink-3);
@@ -401,21 +571,34 @@
   .heroInner {
     grid-template-columns: 1fr;
   }
+
   .heroCard {
     max-width: 480px;
   }
+
   .personas {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .steps {
     grid-template-columns: 1fr;
   }
+
+  .tripsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
+
 @media (max-width: 560px) {
   .personas {
     grid-template-columns: 1fr;
   }
+
   .statsInner {
     gap: 28px;
+  }
+
+  .tripsGrid {
+    grid-template-columns: 1fr;
   }
 }
