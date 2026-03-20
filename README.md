@@ -1,6 +1,6 @@
 # PackMate – Collaborative Travel Packing List Sharer
 
-![PackMate Dashboard](./screenshots/dashboard.png)
+![PackMate Dashboard](./screenshots/home.png)
 
 ---
 
@@ -36,7 +36,7 @@ The application is deployed on Vercel with MongoDB Atlas for the database.
 
 ## Slides
 
-[Google Slides – to be added]
+https://docs.google.com/presentation/d/1yK7NN8nF-mYBXKhguoKBxzNFqB3UfK6LAZp7LlPA9EU/edit?usp=sharing
 
 ---
 
