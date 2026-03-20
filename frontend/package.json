@@ -16,7 +16,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint src/",
+    "lint": "eslint src",
     "format": "prettier --write src/"
   },
   "devDependencies": {

@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import { api } from '../utils/api';
 import styles from './AuthContext.module.css';
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext(undefined);
 
 const AuthProvider = ({ children }) => {
