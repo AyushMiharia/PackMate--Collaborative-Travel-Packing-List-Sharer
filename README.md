@@ -30,7 +30,7 @@ The application is deployed on Vercel with MongoDB Atlas for the database.
 
 ## Video Demo
 
-[Link to narrated video demonstration – to be added]
+https://drive.google.com/file/d/1VV0JJDofwkyRlvruE0K42L2PePZDAp9j/view?usp=sharing
 
 ---
 
@@ -236,26 +236,32 @@ npm run build         # Production build
 ```
 packmate/
 ├── backend/
-│   ├── middleware/               # Auth & validation middleware
 │   ├── src/
 │   │   ├── config/               # MongoDB connection & Passport JWT strategy
+│   │   │   ├── index.js
+│   │   │   ├── mongo.js
+│   │   │   └── passport.js
+│   │   ├── constant/             # Shared constants
+│   │   │   ├── errorCode.js
+│   │   │   ├── index.js
+│   │   │   ├── regex.js
+│   │   │   └── statusCode.js
+│   │   ├── controller/           # Business logic
+│   │   │   ├── auth/
+│   │   │   └── user/
+│   │   ├── middleware/           # Auth & validation middleware
+│   │   │   ├── auth/
+│   │   │   ├── emailExists.js
+│   │   │   └── index.js
 │   │   ├── routes/               # Express route definitions
-│   │   │   ├── auth.router.js
-│   │   │   ├── items.router.js
-│   │   │   ├── tips.router.js
-│   │   │   ├── trips.router.js
-│   │   │   └── user.router.js
-│   │   └── server.js             # Express app entry point
-│   ├── scripts/
-│   │   ├── seedItems.js          # Master items seeder
-│   │   ├── seedTips.js           # Community tips seeder
-│   │   └── seedTrips.js          # Sample trips seeder
-│   ├── .env                      # Environment variables (gitignored)
-│   ├── .gitignore
-│   ├── .prettierrc
-│   ├── eslint.config.mjs
-│   ├── nodemon.json
-│   └── package.json
+│   │   │   ├── auth.js
+│   │   │   ├── communityTips.js
+│   │   │   ├── index.js
+│   │   │   ├── items.js
+│   │   │   ├── trips.js
+│   │   │   └── user.js
+│   │   └── utils/                # Helper utilities
+│   └── server.js                 # Express app entry point
 ├── frontend/
 │   ├── public/
 │   ├── src/
