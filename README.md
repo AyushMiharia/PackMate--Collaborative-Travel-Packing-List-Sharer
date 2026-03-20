@@ -30,7 +30,7 @@ The application is deployed on Vercel with MongoDB Atlas for the database.
 
 ## Video Demo
 
-[Link to narrated video demonstration – to be added]
+https://drive.google.com/file/d/1VV0JJDofwkyRlvruE0K42L2PePZDAp9j/view?usp=sharing
 
 ---
 
