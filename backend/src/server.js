@@ -11,6 +11,7 @@ import { serverConnectionLog } from './utils/serverStartLog.js'
 import { configDotenv } from 'dotenv'
 
 configDotenv()
+// Nice use of dotenv for environment variables, but consider using dotenv-safe to validate required vars on startup
 
 const app = express()
 
