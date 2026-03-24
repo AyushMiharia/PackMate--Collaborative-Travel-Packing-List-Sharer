@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 import './styles/global.css';
 import AuthProvider from './context/authContext';
 import RoutesProvider from './routes';
+// Good use of context for auth state management across app
 
 const App = () => {
   return (
